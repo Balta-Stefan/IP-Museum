@@ -1,0 +1,68 @@
+package com.virtualbank.security;
+
+import com.virtualbank.services.ApiUserDetailsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter
+{
+
+    private final PasswordEncoder passwordEncoder;
+    private final ApiUserDetailsService apiUserDetailsService;
+
+    public SecurityConfig(PasswordEncoder passwordEncoder, ApiUserDetailsService apiUserDetailsService)
+    {
+        this.passwordEncoder = passwordEncoder;
+        this.apiUserDetailsService = apiUserDetailsService;
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception
+    {
+        http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/v1/company").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/person").permitAll()
+                .regexMatchers(HttpMethod.POST, "/api/v1/payments/[0-9a-z-]+").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
+
+        /*http
+                .antMatcher("/api/**")
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();*/
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider()
+    {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(apiUserDetailsService);
+
+        return provider;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception
+    {
+        auth.authenticationProvider(daoAuthenticationProvider());
+    }
+
+
+}
