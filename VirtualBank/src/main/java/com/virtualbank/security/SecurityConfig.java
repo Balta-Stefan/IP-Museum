@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
-
     private final PasswordEncoder passwordEncoder;
     private final ApiUserDetailsService apiUserDetailsService;
 
@@ -34,10 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers(HttpMethod.POST, "/api/v1/company").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/person").permitAll()
                 .regexMatchers(HttpMethod.POST, "/api/v1/payments/[0-9a-z-]+").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+                .antMatchers("/gui").permitAll()
+                .anyRequest().authenticated().and().httpBasic();
 
         /*http
                 .antMatcher("/api/**")
