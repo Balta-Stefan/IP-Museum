@@ -15,6 +15,7 @@ import com.virtualbank.repositories.PersonRepository;
 import com.virtualbank.repositories.TransactionsRepository;
 import com.virtualbank.services.PaymentsService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,6 +35,9 @@ public class PaymentsServiceImpl implements PaymentsService
     private final CompanyRepository companyRepository;
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
+
+    @Value("${redirect.url.base}")
+    private String baseURL;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -55,11 +59,11 @@ public class PaymentsServiceImpl implements PaymentsService
         transactionEntity.setReceiver(receiver);
         transactionEntity.setAmount(request.getAmount());
         transactionEntity.setTimestamp(LocalDateTime.now());
-        transactionEntity.setRedirect(request.getRedirectURL());
+        transactionEntity.setNotificationUrl(request.getNotifyEndpoint());
 
         transactionEntity = transactionsRepository.saveAndFlush(transactionEntity);
 
-        return new PaymentRequestResponse(request, transactionEntity.getId().toString());
+        return new PaymentRequestResponse(request, baseURL + transactionEntity.getId().toString());
     }
 
     @Override

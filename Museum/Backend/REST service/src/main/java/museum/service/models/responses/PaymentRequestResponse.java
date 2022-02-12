@@ -1,8 +1,7 @@
-package com.virtualbank.models.responses;
+package museum.service.models.responses;
 
-import com.virtualbank.models.requests.PaymentRequest;
 import lombok.Data;
-
+import museum.service.models.requests.PaymentRequest;
 
 @Data
 public class PaymentRequestResponse

@@ -1,4 +1,4 @@
-package com.virtualbank.models.requests;
+package museum.service.models.requests;
 
 import lombok.Data;
 
