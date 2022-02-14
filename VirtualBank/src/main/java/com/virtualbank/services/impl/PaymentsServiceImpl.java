@@ -63,7 +63,7 @@ public class PaymentsServiceImpl implements PaymentsService
 
         transactionEntity = transactionsRepository.saveAndFlush(transactionEntity);
 
-        return new PaymentRequestResponse(request, baseURL + transactionEntity.getId().toString());
+        return new PaymentRequestResponse(request, baseURL + "api/v1/payments/" + transactionEntity.getId().toString());
     }
 
     @Override

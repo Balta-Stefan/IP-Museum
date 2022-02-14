@@ -1,6 +1,7 @@
 package com.virtualbank.security;
 
 import com.virtualbank.services.ApiUserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,18 +11,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
-    private final PasswordEncoder passwordEncoder;
     private final ApiUserDetailsService apiUserDetailsService;
 
-    public SecurityConfig(PasswordEncoder passwordEncoder, ApiUserDetailsService apiUserDetailsService)
+    @Value("${bcrypt.strength}")
+    private int bcryptStrength;
+
+    public SecurityConfig(ApiUserDetailsService apiUserDetailsService)
     {
-        this.passwordEncoder = passwordEncoder;
         this.apiUserDetailsService = apiUserDetailsService;
     }
 
@@ -49,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     public DaoAuthenticationProvider daoAuthenticationProvider()
     {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
+        provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(apiUserDetailsService);
 
         return provider;
@@ -61,5 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
+
+    @Bean
+    public PasswordEncoder passwordEncoder()
+    {
+        return new BCryptPasswordEncoder(bcryptStrength);
+    }
 
 }
