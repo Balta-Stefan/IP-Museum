@@ -15,7 +15,9 @@ import museum.service.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Transactional
+@Service
 public class UserServiceImpl implements UserService
 {
     private final UserRepository userRepository;
@@ -30,7 +33,7 @@ public class UserServiceImpl implements UserService
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("token.validity_days")
+    @Value("${token.validity_days}")
     private Integer token_validity_days;
 
     @PersistenceContext
@@ -42,6 +45,25 @@ public class UserServiceImpl implements UserService
         this.accessTokensRepository = accessTokensRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostConstruct
+    private void postConstruct()
+    {
+        if(userRepository.count() == 0)
+        {
+            UserEntity user = new UserEntity();
+
+            user.setFirstName("admin1");
+            user.setLastName("admin2");
+            user.setEmail("admin1@mail.com");
+            user.setUsername("admin1");
+            user.setPassword(passwordEncoder.encode("admin1"));
+            user.setRole(Roles.ADMIN);
+            user.setActive(true);
+
+            userRepository.saveAndFlush(user);
+        }
     }
 
     @Override
@@ -76,9 +98,14 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public AccessTokenDTO grantAccessToken(UserDTO user)
+    public AccessTokenDTO generateAccessToken(Integer userID)
     {
-        UserEntity userEntity = userRepository.findById(user.getUserID()).orElseThrow(NotFoundException::new);
+        UserEntity userEntity = userRepository.findById(userID).orElseThrow(NotFoundException::new);
+
+        if(userEntity.getRole().equals(Roles.ADMIN) == false)
+        {
+            throw new ForbiddenException();
+        }
 
         AccesstokenEntity newToken = new AccesstokenEntity();
         newToken.setToken(null);

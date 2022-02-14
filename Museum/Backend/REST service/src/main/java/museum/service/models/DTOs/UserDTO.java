@@ -23,7 +23,6 @@ public class UserDTO
     @NotNull
     private Roles role;
 
-    @NotNull
     private Boolean active;
 
     private List<AccessTokenDTO> tokens;

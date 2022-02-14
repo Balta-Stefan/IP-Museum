@@ -6,7 +6,7 @@ public class ForbiddenException extends HttpException
 {
     public ForbiddenException()
     {
-        super(HttpStatus.INTERNAL_SERVER_ERROR);
+        super(HttpStatus.FORBIDDEN);
     }
 
 

@@ -1,7 +1,11 @@
 package museum.service.exceptions;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+@Getter
+@Setter
 public class HttpException extends RuntimeException
 {
     private final HttpStatus status;
