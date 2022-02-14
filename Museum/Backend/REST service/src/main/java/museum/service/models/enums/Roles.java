@@ -1,4 +1,4 @@
-package museum.service.models;
+package museum.service.models.enums;
 
 public enum Roles
 {

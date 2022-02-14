@@ -1,6 +1,7 @@
 package museum.service.models;
 
 import lombok.Data;
+import museum.service.models.enums.Roles;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
