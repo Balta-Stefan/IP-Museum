@@ -27,10 +27,6 @@ public class TransactionEntity
     private LocalDateTime timestamp;
 
     @Basic
-    @Column(name = "redirect", nullable = false, length = 255)
-    private String redirect;
-
-    @Basic
     @Column(name = "notificationURL", nullable = true, length = 255)
     private String notificationUrl;
 

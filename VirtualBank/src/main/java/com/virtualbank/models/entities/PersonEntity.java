@@ -1,5 +1,6 @@
 package com.virtualbank.models.entities;
 
+import com.virtualbank.models.CardType;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -29,7 +30,8 @@ public class PersonEntity extends ClientEntity
 
     @Basic
     @Column(name = "cardType", nullable = false, length = 16)
-    private String cardType;
+    @Enumerated(EnumType.STRING)
+    private CardType cardType;
 
     @Basic
     @Column(name = "cardExpirationDate", nullable = false)

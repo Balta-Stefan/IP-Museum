@@ -1,5 +1,6 @@
 package com.virtualbank.services.impl;
 
+import com.virtualbank.exceptions.ForbiddenException;
 import com.virtualbank.exceptions.InsufficientFunds;
 import com.virtualbank.exceptions.NotFoundException;
 import com.virtualbank.exceptions.TransactionAlreadyDone;
@@ -14,7 +15,6 @@ import com.virtualbank.repositories.CompanyRepository;
 import com.virtualbank.repositories.PersonRepository;
 import com.virtualbank.repositories.TransactionsRepository;
 import com.virtualbank.services.PaymentsService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,7 +34,6 @@ public class PaymentsServiceImpl implements PaymentsService
     private final TransactionsRepository transactionsRepository;
     private final CompanyRepository companyRepository;
     private final PersonRepository personRepository;
-    private final ModelMapper modelMapper;
 
     @Value("${redirect.url.base}")
     private String baseURL;
@@ -42,12 +41,11 @@ public class PaymentsServiceImpl implements PaymentsService
     @PersistenceContext
     private EntityManager entityManager;
 
-    public PaymentsServiceImpl(TransactionsRepository transactionsRepository, CompanyRepository companyRepository, PersonRepository personRepository, ModelMapper modelMapper)
+    public PaymentsServiceImpl(TransactionsRepository transactionsRepository, CompanyRepository companyRepository, PersonRepository personRepository)
     {
         this.transactionsRepository = transactionsRepository;
         this.companyRepository = companyRepository;
         this.personRepository = personRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -68,10 +66,20 @@ public class PaymentsServiceImpl implements PaymentsService
     }
 
     @Override
-    public TransactionDTO performPayment(String token, PaymentDTO payer) throws NotFoundException, InsufficientFunds, TransactionAlreadyDone
+    public TransactionDTO performPayment(String token, PaymentDTO payer) throws NotFoundException, InsufficientFunds, TransactionAlreadyDone, ForbiddenException
     {
         TransactionEntity transactionEntity = transactionsRepository.findById(UUID.fromString(token)).orElseThrow(NotFoundException::new);
         PersonEntity payerEntity = personRepository.findByCardNumber(payer.getCardNumber()).orElseThrow(NotFoundException::new);
+
+
+        if(!payer.getFirstName().equals(payerEntity.getFirstName()) ||
+                !payer.getLastName().equals(payerEntity.getLastName()) ||
+                !payer.getCardType().equals(payerEntity.getCardType()) ||
+                !payer.getCardExpirationDate().equals(payerEntity.getCardExpirationDate()) ||
+                !payer.getPin().equals(payerEntity.getPin()))
+        {
+            throw new ForbiddenException();
+        }
 
         if (transactionEntity.getPayer() != null)
         {
@@ -91,7 +99,7 @@ public class PaymentsServiceImpl implements PaymentsService
                 transactionEntity.getReceiver().getId(),
                 transactionEntity.getAmount(),
                 transactionEntity.getTimestamp(),
-                transactionEntity.getRedirect(),
+                baseURL + transactionEntity.getId().toString(),
                 transactionEntity.getNotificationUrl(),
                 transactionEntity.getPayer().getId(),
                 transactionEntity.getScratchString());

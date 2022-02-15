@@ -1,5 +1,6 @@
 package com.virtualbank.advices;
 
+import com.virtualbank.exceptions.ForbiddenException;
 import com.virtualbank.exceptions.InsufficientFunds;
 import com.virtualbank.exceptions.NotFoundException;
 import com.virtualbank.exceptions.TransactionAlreadyDone;
@@ -32,6 +33,10 @@ public class GlobalExceptionHandler
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public void handleForbiddenException(){}
 
 
     @ExceptionHandler(NotFoundException.class)

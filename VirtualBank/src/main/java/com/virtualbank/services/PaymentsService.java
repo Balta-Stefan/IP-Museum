@@ -1,5 +1,6 @@
 package com.virtualbank.services;
 
+import com.virtualbank.exceptions.ForbiddenException;
 import com.virtualbank.exceptions.InsufficientFunds;
 import com.virtualbank.exceptions.NotFoundException;
 import com.virtualbank.exceptions.TransactionAlreadyDone;
@@ -11,5 +12,5 @@ import com.virtualbank.models.responses.PaymentRequestResponse;
 public interface PaymentsService
 {
     PaymentRequestResponse requestPayment(PaymentRequest request) throws NotFoundException;
-    TransactionDTO performPayment(String token, PaymentDTO payer) throws NotFoundException, InsufficientFunds, TransactionAlreadyDone;
+    TransactionDTO performPayment(String token, PaymentDTO payer) throws NotFoundException, InsufficientFunds, TransactionAlreadyDone, ForbiddenException;
 }

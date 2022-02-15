@@ -1,5 +1,6 @@
 package com.virtualbank.rest;
 
+import com.virtualbank.exceptions.ForbiddenException;
 import com.virtualbank.exceptions.InsufficientFunds;
 import com.virtualbank.exceptions.NotFoundException;
 import com.virtualbank.exceptions.TransactionAlreadyDone;
@@ -25,8 +26,8 @@ public class PaymentsController
         this.paymentsService = paymentsService;
     }
 
-    @PostMapping("/{token}")
-    public TransactionDTO pay(@PathVariable String token, @RequestBody @Valid PaymentDTO payment) throws NotFoundException, TransactionAlreadyDone, InsufficientFunds
+    @PatchMapping("/{token}")
+    public TransactionDTO pay(@PathVariable String token, @RequestBody @Valid PaymentDTO payment) throws NotFoundException, TransactionAlreadyDone, InsufficientFunds, ForbiddenException
     {
         return paymentsService.performPayment(token, payment);
     }
