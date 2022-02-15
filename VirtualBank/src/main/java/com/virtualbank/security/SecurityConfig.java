@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,10 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     {
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/company").permitAll()
+                /*.antMatchers(HttpMethod.POST, "/api/v1/company").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/person").permitAll()
                 .regexMatchers(HttpMethod.POST, "/api/v1/payments/[0-9a-z-]+").permitAll()
-                .antMatchers("/gui").permitAll()
+                .antMatchers("/gui").permitAll()*/
                 .anyRequest().authenticated().and().httpBasic();
 
         /*http
@@ -46,6 +47,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .authenticated()
                 .and()
                 .httpBasic();*/
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception
+    {
+        web.ignoring()
+                .antMatchers(HttpMethod.POST, "/api/v1/company")
+                .antMatchers(HttpMethod.POST, "/api/v1/person")
+                .regexMatchers(HttpMethod.POST, "/api/v1/payments/[0-9a-z-]+")
+                .antMatchers("/gui");
     }
 
     @Bean
