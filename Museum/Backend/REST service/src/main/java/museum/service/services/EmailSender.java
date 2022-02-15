@@ -1,10 +1,10 @@
 package museum.service.services;
 
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
 
-import java.util.List;
+import javax.mail.MessagingException;
 
 public interface EmailSender
 {
-    void sendEmail(String receiver, String title, String message, List<InputStreamResource> attachments);
+    void sendEmail(String receiver, String title, String message, InputStreamSource attachments) throws MessagingException;
 }

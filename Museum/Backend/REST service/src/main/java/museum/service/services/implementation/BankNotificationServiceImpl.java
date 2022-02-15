@@ -12,6 +12,7 @@ import museum.service.utilities.TourPDFCreator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -63,12 +64,13 @@ public class BankNotificationServiceImpl implements BankNotificationService
         // email the customer
         try
         {
-            InputStreamResource pdfStream = TourPDFCreator.createPDFTicket(tourDTO, tourPurchaseDTO);
-            emailSender.sendEmail(buyer.getEmail(), emailTitle, emailMessage, List.of(pdfStream));
+            InputStreamSource pdfStream = TourPDFCreator.createPDFTicket(tourDTO, tourPurchaseDTO);
+            emailSender.sendEmail(buyer.getEmail(), emailTitle, emailMessage, pdfStream);
         }
         catch(Exception e)
         {
             // log the exception
+            e.printStackTrace();
         }
     }
 }

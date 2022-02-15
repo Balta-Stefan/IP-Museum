@@ -112,7 +112,7 @@ public class PaymentsServiceImpl implements PaymentsService
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.postForEntity(transactionDTO.getNotificationURL(), transactionDTO, TransactionDTO.class);
             }
-            catch(Exception e){}
+            catch(Exception e){e.printStackTrace();}
         }
 
         return transactionDTO;

@@ -6,7 +6,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,7 +16,7 @@ import java.io.IOException;
 
 public class TourPDFCreator
 {
-    public static InputStreamResource createPDFTicket(TourDTO tourDTO, TourPurchaseDTO tourPurchaseDTO) throws IOException
+    public static InputStreamSource createPDFTicket(TourDTO tourDTO, TourPurchaseDTO tourPurchaseDTO) throws IOException
     {
         try(PDDocument document = new PDDocument())
         {
@@ -34,7 +35,7 @@ public class TourPDFCreator
                 document.save(fileStream);
 
 
-                InputStreamResource stream = new InputStreamResource(new ByteArrayInputStream(fileStream.toByteArray()), "Karta.pdf");
+                InputStreamSource stream = new ByteArrayResource(fileStream.toByteArray(), "Karta.pdf");
                 fileStream.close();
 
                 return stream;
