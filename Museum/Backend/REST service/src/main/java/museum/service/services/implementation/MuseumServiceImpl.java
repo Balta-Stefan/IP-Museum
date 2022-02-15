@@ -60,7 +60,7 @@ public class MuseumServiceImpl implements MuseumService
         TourEntity tourEntity = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
         UserEntity user = userRepository.findById(buyerID).orElseThrow(NotFoundException::new);
 
-        PaymentRequest request = new PaymentRequest(tourEntity.getPrice(), transactionNotificationURL);
+        PaymentRequest request = new PaymentRequest(tourEntity.getPrice(), transactionNotificationURL, buyerID);
 
         WebClient client = WebClient.builder()
                 .defaultHeaders(header -> header.setBasicAuth(bankAccountUsername, bankAccountPassword))
