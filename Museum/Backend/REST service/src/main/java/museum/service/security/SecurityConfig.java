@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/museum/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

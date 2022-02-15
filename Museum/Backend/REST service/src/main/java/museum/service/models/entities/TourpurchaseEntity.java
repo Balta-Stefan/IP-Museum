@@ -20,6 +20,10 @@ public class TourpurchaseEntity
     @Column(name = "purchased", nullable = false)
     private LocalDateTime purchased;
 
+    @Basic
+    @Column(name = "paid")
+    private LocalDateTime paid;
+
     @ManyToOne
     @JoinColumn(name = "tour", referencedColumnName = "tourID", nullable = false)
     private TourEntity tour;

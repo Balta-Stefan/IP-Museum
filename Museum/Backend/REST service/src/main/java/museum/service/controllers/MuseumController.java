@@ -19,7 +19,7 @@ public class MuseumController
         this.museumService = museumService;
     }
 
-    @PostMapping("/{museumID}/tour/{tourID}")
+    @PostMapping("/{museumID}/tour/{tourID}/tickets")
     public String buyTicket(@PathVariable Integer museumID, @PathVariable Integer tourID, Authentication authentication)
     {
         CustomUserDetails userDetails = (CustomUserDetails)(authentication.getPrincipal());

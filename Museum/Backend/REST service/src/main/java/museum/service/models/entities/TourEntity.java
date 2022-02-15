@@ -30,7 +30,7 @@ public class TourEntity
     private BigDecimal price;
 
     @OneToMany(mappedBy = "tour")
-    private List<TourpictureEntity> pictures;
+    private List<TourStaticContent> staticContent;
 
     @OneToMany(mappedBy = "tour")
     private List<TourpurchaseEntity> purchases;
@@ -38,8 +38,4 @@ public class TourEntity
     @ManyToOne
     @JoinColumn(name = "museum", referencedColumnName = "museumID", nullable = false)
     private MuseumEntity museum;
-
-    @OneToMany(mappedBy = "tour")
-    private List<TourvideoEntity> videos;
-
 }

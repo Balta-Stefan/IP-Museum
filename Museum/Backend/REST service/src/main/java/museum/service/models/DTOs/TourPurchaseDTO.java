@@ -17,4 +17,6 @@ public class TourPurchaseDTO
 
     @NotNull
     private LocalDateTime purchased;
+
+    private LocalDateTime paid;
 }

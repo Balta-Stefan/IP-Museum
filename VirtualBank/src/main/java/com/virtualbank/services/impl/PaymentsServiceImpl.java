@@ -60,6 +60,7 @@ public class PaymentsServiceImpl implements PaymentsService
         transactionEntity.setAmount(request.getAmount());
         transactionEntity.setTimestamp(LocalDateTime.now());
         transactionEntity.setNotificationUrl(request.getNotifyEndpoint());
+        transactionEntity.setScratchString(request.getScratchString());
 
         transactionEntity = transactionsRepository.saveAndFlush(transactionEntity);
 
@@ -85,13 +86,15 @@ public class PaymentsServiceImpl implements PaymentsService
         payerEntity.setAvailableFunds(payerEntity.getAvailableFunds().subtract(transactionEntity.getAmount()));
         transactionEntity.setPayer(payerEntity);
 
-        TransactionDTO transactionDTO = new TransactionDTO(transactionEntity.getId().toString(),
+        TransactionDTO transactionDTO = new TransactionDTO(TransactionDTO.PaymentStatus.SUCCESSFUL,
+                transactionEntity.getId().toString(),
                 transactionEntity.getReceiver().getId(),
                 transactionEntity.getAmount(),
                 transactionEntity.getTimestamp(),
                 transactionEntity.getRedirect(),
                 transactionEntity.getNotificationUrl(),
-                transactionEntity.getPayer().getId());
+                transactionEntity.getPayer().getId(),
+                transactionEntity.getScratchString());
 
         // notify the receiver
         if(transactionDTO.getNotificationURL() != null)

@@ -1,6 +1,6 @@
 package museum.service.models.enums;
 
-public enum PresentationResourceType
+public enum StaticResourceLocationType
 {
     LOCAL, REMOTE
 }

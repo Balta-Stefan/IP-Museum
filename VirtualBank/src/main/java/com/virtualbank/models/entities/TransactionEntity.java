@@ -34,6 +34,10 @@ public class TransactionEntity
     @Column(name = "notificationURL", nullable = true, length = 255)
     private String notificationUrl;
 
+    @Basic
+    @Column(name = "scratchString", nullable = true, length = 255)
+    private String scratchString;
+
     @ManyToOne
     @JoinColumn(name = "receiver", referencedColumnName = "id", nullable = false)
     private CompanyEntity receiver;

@@ -17,5 +17,5 @@ public class PaymentRequest
     @NotBlank
     private String notifyEndpoint;
 
-    private Integer customerID;
+    private String scratchString;
 }

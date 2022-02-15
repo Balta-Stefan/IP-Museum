@@ -42,7 +42,10 @@ CREATE TABLE IF NOT EXISTS `museum`.`Users` (
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `role` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`userID`))
+  `active` TINYINT NOT NULL,
+  PRIMARY KEY (`userID`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -73,15 +76,16 @@ CREATE TABLE IF NOT EXISTS `museum`.`TourPurchases` (
   `tour` INT NOT NULL,
   `user` INT NOT NULL,
   `purchased` DATETIME NOT NULL,
+  `paid` DATETIME NULL,
   PRIMARY KEY (`purchaseID`),
   INDEX `tour_idx` (`tour` ASC) VISIBLE,
   INDEX `user_idx` (`user` ASC) VISIBLE,
-  CONSTRAINT `tour_purchases_tour_FK`
+  CONSTRAINT `tour`
     FOREIGN KEY (`tour`)
     REFERENCES `museum`.`Tours` (`tourID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `tour_purchases_user_FK`
+  CONSTRAINT `user`
     FOREIGN KEY (`user`)
     REFERENCES `museum`.`Users` (`userID`)
     ON DELETE NO ACTION
@@ -90,34 +94,17 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `museum`.`TourPictures`
+-- Table `museum`.`TourStaticContent`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `museum`.`TourPictures` (
-  `pictureID` INT NOT NULL AUTO_INCREMENT,
-  `pictureURI` VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS `museum`.`TourStaticContent` (
+  `staticContentID` INT NOT NULL AUTO_INCREMENT,
+  `URI` VARCHAR(255) NOT NULL,
   `tour` INT NOT NULL,
-  `type` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`pictureID`),
+  `locationType` VARCHAR(45) NOT NULL,
+  `resourceType` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`staticContentID`),
   INDEX `tour_idx` (`tour` ASC) VISIBLE,
-  CONSTRAINT `tour_pictures_tour_FK`
-    FOREIGN KEY (`tour`)
-    REFERENCES `museum`.`Tours` (`tourID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `museum`.`TourVideos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `museum`.`TourVideos` (
-  `videoID` INT NOT NULL AUTO_INCREMENT,
-  `videoURI` VARCHAR(255) NOT NULL,
-  `type` VARCHAR(45) NOT NULL,
-  `tour` INT NOT NULL,
-  PRIMARY KEY (`videoID`),
-  INDEX `tour_idx` (`tour` ASC) VISIBLE,
-  CONSTRAINT `tour_videos_tour_FK`
+  CONSTRAINT `tour_static_content_tour_FK`
     FOREIGN KEY (`tour`)
     REFERENCES `museum`.`Tours` (`tourID`)
     ON DELETE NO ACTION

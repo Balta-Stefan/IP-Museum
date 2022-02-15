@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Data
@@ -17,5 +18,6 @@ public class PaymentRequest
     @NotBlank
     private String notifyEndpoint;
 
-    private Integer customerID; // used by the requester
+    @Size(max = 255)
+    private String scratchString; // used by the requester
 }

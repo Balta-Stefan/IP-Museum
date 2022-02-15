@@ -4,10 +4,12 @@ import museum.service.exceptions.NotFoundException;
 import museum.service.models.DTOs.MuseumDTO;
 import museum.service.models.entities.MuseumEntity;
 import museum.service.models.entities.TourEntity;
+import museum.service.models.entities.TourpurchaseEntity;
 import museum.service.models.entities.UserEntity;
 import museum.service.models.requests.PaymentRequest;
 import museum.service.models.responses.PaymentRequestResponse;
 import museum.service.repositories.MuseumsRepository;
+import museum.service.repositories.TourTicketsRepository;
 import museum.service.repositories.ToursRepository;
 import museum.service.repositories.UserRepository;
 import museum.service.services.MuseumService;
@@ -21,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,7 @@ public class MuseumServiceImpl implements MuseumService
     private final ToursRepository toursRepository;
     private final UserRepository userRepository;
     private final MuseumsRepository museumsRepository;
+    private final TourTicketsRepository tourTicketsRepository;
 
     private final ModelMapper modelMapper;
 
@@ -46,11 +50,12 @@ public class MuseumServiceImpl implements MuseumService
     @Value("${bank_url}")
     private String bank_url;
 
-    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, ModelMapper modelMapper)
+    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, ModelMapper modelMapper)
     {
         this.toursRepository = toursRepository;
         this.userRepository = userRepository;
         this.museumsRepository = museumsRepository;
+        this.tourTicketsRepository = tourTicketsRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -60,7 +65,14 @@ public class MuseumServiceImpl implements MuseumService
         TourEntity tourEntity = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
         UserEntity user = userRepository.findById(buyerID).orElseThrow(NotFoundException::new);
 
-        PaymentRequest request = new PaymentRequest(tourEntity.getPrice(), transactionNotificationURL, buyerID);
+        TourpurchaseEntity tourpurchaseEntity = new TourpurchaseEntity();
+        tourpurchaseEntity.setPurchaseId(null);
+        tourpurchaseEntity.setTour(tourEntity);
+        tourpurchaseEntity.setPurchased(LocalDateTime.now());
+        tourpurchaseEntity.setUser(user);
+        tourpurchaseEntity = tourTicketsRepository.saveAndFlush(tourpurchaseEntity);
+
+        PaymentRequest request = new PaymentRequest(tourEntity.getPrice(), transactionNotificationURL, tourpurchaseEntity.getPurchaseId().toString());
 
         WebClient client = WebClient.builder()
                 .defaultHeaders(header -> header.setBasicAuth(bankAccountUsername, bankAccountPassword))

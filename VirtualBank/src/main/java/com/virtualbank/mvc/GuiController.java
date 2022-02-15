@@ -56,7 +56,18 @@ public class GuiController
         List<TransactionDTO> transactions = new ArrayList<>();
         for(TransactionEntity te : transactionsRepository.findAllByPayer(person.getId()))
         {
-            transactions.add(new TransactionDTO(te.getId().toString(), te.getReceiver().getId(), te.getAmount(), te.getTimestamp(), null, null, null));
+            TransactionDTO.PaymentStatus status = (te.getPayer() == null) ? TransactionDTO.PaymentStatus.UNSUCCESSFUL : TransactionDTO.PaymentStatus.SUCCESSFUL;
+            transactions.add(
+                    new TransactionDTO(
+                            status,
+                            te.getId().toString(),
+                            te.getReceiver().getId(),
+                            te.getAmount(),
+                            te.getTimestamp(),
+                            null,
+                            null,
+                            null,
+                            null));
         }
 
         return transactions;
