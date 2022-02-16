@@ -5,18 +5,16 @@ import museum.service.models.DTOs.TourDTO;
 import museum.service.models.DTOs.TourPurchaseDTO;
 import museum.service.models.entities.TourpurchaseEntity;
 import museum.service.models.entities.UserEntity;
-import museum.service.repositories.TourTicketsRepository;
 import museum.service.services.BankNotificationService;
 import museum.service.services.EmailSender;
+import museum.service.repositories.TourTicketsRepository;
 import museum.service.utilities.TourPDFCreator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

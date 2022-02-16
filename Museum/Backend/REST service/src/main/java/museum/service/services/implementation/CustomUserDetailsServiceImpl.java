@@ -2,8 +2,8 @@ package museum.service.services.implementation;
 
 import museum.service.models.CustomUserDetails;
 import museum.service.models.entities.UserEntity;
-import museum.service.repositories.UserRepository;
 import museum.service.services.CustomUserDetailsService;
+import museum.service.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
