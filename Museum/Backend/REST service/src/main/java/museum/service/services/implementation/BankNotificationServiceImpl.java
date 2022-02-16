@@ -51,6 +51,13 @@ public class BankNotificationServiceImpl implements BankNotificationService
         }
 
         TourpurchaseEntity tourPurchase = tourPurchaseEntity.get();
+
+        if(notificationDTO.getStatus().equals(BankNotificationDTO.PaymentStatus.UNSUCCESSFUL))
+        {
+            tourTicketsRepository.delete(tourPurchase);
+            return;
+        }
+
         tourPurchase.setPaid(LocalDateTime.now());
         tourTicketsRepository.saveAndFlush(tourPurchase);
 
