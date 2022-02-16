@@ -2,11 +2,13 @@ package museum.service.controllers;
 
 import museum.service.models.CustomUserDetails;
 import museum.service.models.DTOs.MuseumDTO;
+import museum.service.models.DTOs.TourDTO;
 import museum.service.services.MuseumService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/museum")
@@ -19,6 +21,12 @@ public class MuseumController
         this.museumService = museumService;
     }
 
+    @GetMapping("{museumID}/tour")
+    public List<TourDTO> getMuseumTours(@PathVariable Integer museumID)
+    {
+        return museumService.getTours(museumID);
+    }
+
     @PostMapping("/{museumID}/tour/{tourID}/tickets")
     public String buyTicket(@PathVariable Integer museumID, @PathVariable Integer tourID, Authentication authentication)
     {
@@ -28,9 +36,9 @@ public class MuseumController
     }
 
     @GetMapping
-    public List<MuseumDTO> getMuseums()
+    public List<MuseumDTO> getMuseums(@RequestParam Map<String, String> params)
     {
-        return museumService.getMuseums();
+        return museumService.getMuseums(params);
     }
 
     @GetMapping("/{id}")

@@ -2,6 +2,7 @@ package museum.service.services.implementation;
 
 import museum.service.exceptions.NotFoundException;
 import museum.service.models.DTOs.MuseumDTO;
+import museum.service.models.DTOs.TourDTO;
 import museum.service.models.entities.MuseumEntity;
 import museum.service.models.entities.TourEntity;
 import museum.service.models.entities.TourpurchaseEntity;
@@ -25,6 +26,7 @@ import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,9 +93,12 @@ public class MuseumServiceImpl implements MuseumService
     }
 
     @Override
-    public List<MuseumDTO> getMuseums()
+    public List<MuseumDTO> getMuseums(Map<String, String> params)
     {
-        List<MuseumEntity> museums = museumsRepository.findAll();
+        String name = params.get("name");
+        String city = params.get("city");
+
+        List<MuseumEntity> museums = museumsRepository.filterMuseums(name, city);
 
         return museums
                 .stream()
@@ -107,5 +112,18 @@ public class MuseumServiceImpl implements MuseumService
         MuseumEntity museum = museumsRepository.findById(id).orElseThrow(NotFoundException::new);
 
         return modelMapper.map(museum, MuseumDTO.class);
+    }
+
+    @Override
+    public List<TourDTO> getTours(Integer museumID)
+    {
+        MuseumEntity museum = museumsRepository.findById(museumID).orElseThrow(NotFoundException::new);
+
+        List<TourEntity> tours = toursRepository.findAllByMuseum(museum);
+
+        return tours
+                .stream()
+                .map(t -> modelMapper.map(t, TourDTO.class))
+                .collect(Collectors.toList());
     }
 }
