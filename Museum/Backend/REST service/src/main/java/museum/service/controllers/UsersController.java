@@ -1,10 +1,8 @@
 package museum.service.controllers;
 
 import museum.service.models.CustomUserDetails;
-import museum.service.models.DTOs.AccessTokenDTO;
 import museum.service.models.DTOs.UserDTO;
 import museum.service.services.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +30,5 @@ public class UsersController
         }
 
         return userService.createUser(user, Optional.ofNullable(userDetails));
-    }
-
-    @PostMapping("/{id}/token")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public AccessTokenDTO generateAccessToken(@PathVariable(name = "id") Integer userID)
-    {
-        return userService.generateAccessToken(userID);
     }
 }
