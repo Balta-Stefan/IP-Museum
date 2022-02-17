@@ -1,6 +1,8 @@
 package museum.service.services.implementation;
 
+import museum.service.models.DTOs.CityDTO;
 import museum.service.models.DTOs.CountryDTO;
+import museum.service.models.DTOs.RegionDTO;
 import museum.service.services.CountriesService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,14 @@ import java.util.List;
 @Service
 public class CountriesServiceImpl implements CountriesService
 {
-    @Value("${countries.api.url}")
-    private String countriesApiURL;
+    private final String countriesApiURL = "https://restcountries.com/v3.1/region/europe";
+    private final String alpha2RegionURL = "http://battuta.medunes.net/api/region";
+    private final String alpha2AndRegion2CitiesURL = "http://battuta.medunes.net/api/city/";
 
-    private final int getCountriesTimeoutSeconds = 10;
+    @Value("${api.key.alpha_2_code_converter}")
+    private String alpha2ConverterApiKey;
+
+    private final int requestTimeoutSeconds = 10;
 
     @Override
     public List<CountryDTO> getCountries()
@@ -27,8 +33,47 @@ public class CountriesServiceImpl implements CountriesService
 
         CountryDTO[] countries = client.get()
                 .retrieve()
-                .bodyToMono(CountryDTO[].class).block(Duration.ofSeconds(getCountriesTimeoutSeconds));
+                .bodyToMono(CountryDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
 
         return Arrays.asList(countries);
+    }
+
+    @Override
+    public List<RegionDTO> getRegions(String alpha2)
+    {
+        WebClient client = WebClient.builder()
+                .baseUrl(alpha2RegionURL)
+                .build();
+
+        RegionDTO[] regions = client
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/{COUNTRY_CODE}/all/")
+                        .queryParam("key", "{API_KEY}")
+                        .build(alpha2, alpha2ConverterApiKey))
+                .retrieve()
+                .bodyToMono(RegionDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
+
+        return Arrays.asList(regions);
+    }
+
+    @Override
+    public List<CityDTO> getCities(String alpha2Code, String region)
+    {
+        WebClient client = WebClient.builder()
+                .baseUrl(alpha2AndRegion2CitiesURL)
+                .build();
+
+        CityDTO[] cities = client
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(alpha2Code + "/search/")
+                        .queryParam("region", "{region}")
+                        .queryParam("key", "{API_KEY}")
+                        .build(region, alpha2ConverterApiKey))
+                .retrieve()
+                .bodyToMono(CityDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
+
+        return Arrays.asList(cities);
     }
 }
