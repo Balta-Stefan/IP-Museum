@@ -1,7 +1,6 @@
 package museum.service.models.responses;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import museum.service.models.requests.PaymentRequest;
 
 @Data
