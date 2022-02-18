@@ -47,21 +47,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/index.html", "/", "/css/*", "/js/*", "/login").permitAll()
+                .antMatchers("/index.html", "/", "/css/*", "/js/*").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/user").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/transactions").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                    .loginPage("/login")
-                    .failureUrl("/login?error=true")
-                .and()
-                .logout()
-                    .logoutUrl("/logout")
-                    .clearAuthentication(true)
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
-                    .logoutSuccessUrl("/login");
+                .httpBasic();
     }
 
     /*@Override

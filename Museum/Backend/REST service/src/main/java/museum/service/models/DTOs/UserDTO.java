@@ -20,7 +20,6 @@ public class UserDTO
     @Email
     private String email;
 
-    @NotNull
     private Roles role;
 
     private Boolean active;

@@ -69,7 +69,11 @@ public class UserServiceImpl implements UserService
     @Override
     public UserDTO createUser(UserDTO userToCreate, Optional<CustomUserDetails> requester)
     {
-        if(userToCreate.getRole().equals(Roles.ADMIN))
+        if(userToCreate == null)
+        {
+            userToCreate.setRole(Roles.USER);
+        }
+        else if(userToCreate.getRole().equals(Roles.ADMIN))
         {
             CustomUserDetails creator = requester.orElseThrow(ForbiddenException::new);
 

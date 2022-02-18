@@ -10,6 +10,9 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.component';
 import { MuseumsPageComponent } from './components/museums-page/museums-page.component';
 import { MuseumOverviewComponent } from './components/museum-overview/museum-overview.component';
+import { LoginPageComponent } from './components/login-page/login-page.component';
+import { SessionCheckComponent } from './components/session-check/session-check.component';
+import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 
 export const baseURL: string = "http://localhost:8000/api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
@@ -35,7 +38,10 @@ export function emptyStringsToNull(form: FormGroup){
     MainPageComponent,
     RssFeedCardComponent,
     MuseumsPageComponent,
-    MuseumOverviewComponent
+    MuseumOverviewComponent,
+    LoginPageComponent,
+    SessionCheckComponent,
+    RegistrationPageComponent
   ],
   imports: [
     BrowserModule,
