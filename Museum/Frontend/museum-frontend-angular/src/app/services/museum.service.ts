@@ -18,4 +18,11 @@ export class MuseumService {
       params: params
     });
   }
+
+  getMuseum(id: number): Observable<MuseumDTO>{
+    return this.client.get<MuseumDTO>(`${baseURL}/museums/${id}`,
+    {
+      headers: jsonHeaders
+    });
+  }
 }

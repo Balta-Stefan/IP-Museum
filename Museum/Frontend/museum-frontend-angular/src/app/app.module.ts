@@ -9,6 +9,7 @@ import { MuseumListCardComponent } from './components/museum-list-card/museum-li
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.component';
 import { MuseumsPageComponent } from './components/museums-page/museums-page.component';
+import { MuseumOverviewComponent } from './components/museum-overview/museum-overview.component';
 
 export const baseURL: string = "http://localhost:8080/api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
@@ -33,7 +34,8 @@ export function emptyStringsToNull(form: FormGroup){
     MuseumListCardComponent,
     MainPageComponent,
     RssFeedCardComponent,
-    MuseumsPageComponent
+    MuseumsPageComponent,
+    MuseumOverviewComponent
   ],
   imports: [
     BrowserModule,
