@@ -26,15 +26,9 @@ CREATE TABLE IF NOT EXISTS `museum`.`Museums` (
   `country` VARCHAR(45) NOT NULL,
   `latitude` DECIMAL(10,8) NOT NULL,
   `longitude` DECIMAL(10,8) NOT NULL,
+  `thumbnail` VARCHAR(255) NULL,
   `type` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`museumID`),
-	INDEX `thumbnail_idx` (`thumbnail` ASC) VISIBLE,
-		CONSTRAINT `thumbnail`
-		FOREIGN KEY (`thumbnail`)
-		REFERENCES `museum`.`TourStaticContent` (`staticContentID`)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION)
-  )
+  PRIMARY KEY (`museumID`))
 ENGINE = InnoDB;
 
 
