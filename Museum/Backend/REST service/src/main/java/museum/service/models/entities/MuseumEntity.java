@@ -48,6 +48,10 @@ public class MuseumEntity
     @Column(name = "type", nullable = false, length = 45)
     private String type;
 
+    @OneToOne
+    @JoinColumn(name = "thumbnail", referencedColumnName = "staticContentID")
+    private TourStaticContent thumbnail;
+
     @OneToMany(mappedBy = "museum")
     private List<TourEntity> tours;
 

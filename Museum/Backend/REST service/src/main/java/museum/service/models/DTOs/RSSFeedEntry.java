@@ -11,5 +11,6 @@ public class RSSFeedEntry
     private final String title;
     private final String description;
     private final LocalDateTime published;
-    private final List<String> pictures;
+    private final String thumbnail;
+    private final String link;
 }

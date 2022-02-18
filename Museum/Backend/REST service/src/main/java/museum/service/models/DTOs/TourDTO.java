@@ -20,5 +20,7 @@ public class TourDTO
     @NotNull
     private BigDecimal price;
 
+    private TourStaticContentDTO thumbnail;
+
     private List<TourStaticContentDTO> staticContent;
 }

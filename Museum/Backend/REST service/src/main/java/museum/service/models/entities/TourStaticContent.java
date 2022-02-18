@@ -24,6 +24,9 @@ public class TourStaticContent
     @Enumerated(EnumType.STRING)
     private StaticResourceLocationType locationType;
 
+    @OneToOne(mappedBy = "thumbnail")
+    private MuseumEntity museum;
+
     @ManyToOne
     @JoinColumn(name = "tour", referencedColumnName = "tourID", nullable = false)
     private TourEntity tour;

@@ -37,17 +37,19 @@ public class RSSReaderServiceImpl implements RSSReaderService
                 String title = entry.getTitle().trim();
                 String description = entry.getDescription().getValue().trim();
                 LocalDateTime publishedTimestamp = LocalDateTime.ofInstant(entry.getPublishedDate().toInstant(), ZoneId.systemDefault());
-                List<String> pictures = new ArrayList<>();
+                String link = entry.getLink();
+                String picture = null;
 
                 for(SyndEnclosure enclosure : entry.getEnclosures())
                 {
                     if(enclosure.getType().contains("image"))
                     {
-                        pictures.add(enclosure.getUrl());
+                        picture = enclosure.getUrl();
+                        break; // get only one picture - the thumbnail
                     }
                 }
 
-                RSSFeedEntry entryDTO = new RSSFeedEntry(title, description, publishedTimestamp, pictures);
+                RSSFeedEntry entryDTO = new RSSFeedEntry(title, description, publishedTimestamp, picture, link);
                 entries.add(entryDTO);
             }
 
