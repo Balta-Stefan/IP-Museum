@@ -1,0 +1,42 @@
+POST /api/v1/company
+
+{
+	"address": "",
+	"phone": "",
+	"country": "",
+	"city": "",
+	"email": "",
+	"name": ""
+}
+
+POST /api/v1/person
+
+{
+	"address": "",
+	"phone": "",
+	"country": "",
+	"city": "",
+	"email": "",
+	"firstName": "",
+	"lastName": "",
+	"cardType" : "" (Visa, Mastercard, AmericanExpress)
+}
+
+POST /api/v1/payments/{token} - used by customers to pay
+
+{
+	"firstName": "",
+	"lastName": "",
+	"cardNumber": "",
+	"cardType": "",
+	"cardExpirationDate": "",
+	"pin": ""
+}
+
+POST /api/v1/payments - used by companies to request a token
+
+{
+	"amount": "",
+	"notifyEndpoint": "",
+	"scratchString": "" - used by the museum to identify a transaction
+}

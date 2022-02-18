@@ -1,0 +1,18 @@
+POST /api/v1/user
+
+{
+	"firstName": "",
+	"lastName": "",
+	"username": "",
+	"password": "",
+	"email": "",
+	"role": "" (USER, ADMIN)
+}
+
+POST /api/v1/user/{id}/token - get a new token for admin
+
+GET /api/v1/museum - get museums
+
+
+POST /api/v1/museum/{museumID}/tour/{tourID}/tickets - buy ticket
+

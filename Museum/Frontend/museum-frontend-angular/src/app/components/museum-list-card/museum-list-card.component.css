@@ -1,0 +1,16 @@
+.museum-list-card{
+    border: 1px solid black;
+}
+
+.museum-list-card-info{
+    margin-bottom: 15px;
+}
+
+.museum-list-card-info p{
+    margin: 0;
+}
+
+.thumbnail-wrapper{
+    display: flex;
+    align-items: center;
+}

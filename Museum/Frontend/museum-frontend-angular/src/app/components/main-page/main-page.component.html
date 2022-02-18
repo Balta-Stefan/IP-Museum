@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a routerLink="/museums" routerLinkActive="active-route">Muzeji</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Vijesti iz kulture</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Karte</a>
+                </li>
+            </ul>
+            <a class="btn btn-danger float-right">Odjava</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid vh-100">
+    <div class="row" id="main-page-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<!--
+<div class="container-fluid vh-100">
+    <div class="row h-100">
+        <div class="col-md-2" id="sidenav">
+            <a routerLink="/museums" routerLinkActive="active-route">Muzeji</a>
+            <a href="#">Vijesti iz kulture</a>
+        </div>
+    
+        <div class="col-md-10" id="main-page-content">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
+-->

@@ -1,0 +1,14 @@
+.rss-feed-entry-title{
+    text-decoration: none;
+    color: black;
+    font-size: 1.75rem;
+}
+
+.rss-feed-entry-title:hover{
+    text-decoration: underline;
+}
+
+.rss-entry-thumbnail-wrapper{
+    display: flex;
+    align-items: center;
+}

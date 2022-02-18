@@ -1,0 +1,15 @@
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-6 rss-entry-thumbnail-wrapper">
+            <img class="img-fluid" src="{{rssEntry.thumbnail}}">
+        </div>
+
+        <div class="col-md-6">
+            <div class="card-body">
+                <a href="{{rssEntry.link}}" class="card-title rss-feed-entry-title">{{rssEntry.title}}</a>
+                <p class="card-text">{{rssEntry.description}}</p>
+                <p class="text-muted">Objavljeno: {{rssEntry.published | date: 'dd/MM/yy'}}</p>
+            </div>
+        </div>
+    </div>
+</div>

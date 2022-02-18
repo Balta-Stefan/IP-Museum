@@ -1,0 +1,11 @@
+{
+    "userID": 3,
+    "firstName": "Marko",
+    "lastName": "Markovic",
+    "username": "Prvi",
+    "password": "$2a$10$cRFgpR70YiEHjmnu93Q8dOY2F8X2Jg8SZDfMHEO7ucm49hK6YbESm", // 1234
+    "email": "korisnik1@mail.com",
+    "role": "USER",
+    "active": true,
+    "tokens": []
+}
