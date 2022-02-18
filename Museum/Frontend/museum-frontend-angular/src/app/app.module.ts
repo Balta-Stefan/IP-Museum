@@ -8,6 +8,8 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.component';
 import { MuseumsPageComponent } from './components/museums-page/museums-page.component';
 
+export const baseURL: string = "http://localhost:8080/api/v1";
+
 @NgModule({
   declarations: [
     AppComponent,

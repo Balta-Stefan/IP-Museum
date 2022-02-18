@@ -1,14 +1,24 @@
 <div class="vh-100">
     <div class="row">
-        <div class="mb-3">
-            <label for="name" class="form-label">Naziv muzeja</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Unesite naziv muzeja">
-        </div>
-        <div class="mb-3">
-            <label for="city" class="form-label">Grad</label>
-            <input type="text" class="form-control" id="city" name="city" placeholder="Unesite ime grada">
-        </div>
+        <form class="row g-2">
+            <div class="offset-md-3 col-md-3">
+                <label for="name" class="form-label">Naziv muzeja</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Unesite naziv muzeja">
+            </div>
+            <div class="col-md-3">
+                <label for="city" class="form-label">Grad</label>
+                <input type="text" class="form-control" id="city" name="city" placeholder="Unesite ime grada">
+            </div>
 
-        <app-museum-list-card></app-museum-list-card>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary" style="display: block">Filtriraj</button>
+            </div>
+        
+        </form>
+       
+        <div class="row g-2">
+            <app-museum-list-card></app-museum-list-card>
+        </div>
     </div>
 </div>

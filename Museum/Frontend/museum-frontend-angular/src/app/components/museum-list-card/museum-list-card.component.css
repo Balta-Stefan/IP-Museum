@@ -14,3 +14,7 @@
     display: flex;
     align-items: center;
 }
+
+.museum-thumbnail{
+    max-height: 15rem;
+}
