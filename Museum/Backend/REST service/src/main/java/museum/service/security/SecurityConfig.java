@@ -45,13 +45,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/index.html", "/", "/css/*", "/js/*", "/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/user").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/transactions").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .formLogin()
+                    .loginPage("/login")
+                    .failureUrl("/login?error=true")
+                .and()
+                .logout()
+                    .logoutUrl("/logout")
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessUrl("/login");
     }
 
     /*@Override

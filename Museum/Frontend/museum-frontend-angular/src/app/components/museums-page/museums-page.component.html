@@ -18,7 +18,10 @@
         </form>
        
         <div class="row g-2">
-            <app-museum-list-card></app-museum-list-card>
+            <app-museum-list-card *ngFor="let museum of museums"
+            [museum]="museum">
+
+            </app-museum-list-card>
         </div>
     </div>
 </div>

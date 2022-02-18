@@ -11,7 +11,7 @@ import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.c
 import { MuseumsPageComponent } from './components/museums-page/museums-page.component';
 import { MuseumOverviewComponent } from './components/museum-overview/museum-overview.component';
 
-export const baseURL: string = "http://localhost:8080/api/v1";
+export const baseURL: string = "http://localhost:8000/api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
   'Accept': 'application/json', 
   'Content-Type': 'application/json'
