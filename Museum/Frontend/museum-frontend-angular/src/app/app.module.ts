@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {HttpClientModule, HttpHeaders} from '@angular/common/http';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,6 +11,21 @@ import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.c
 import { MuseumsPageComponent } from './components/museums-page/museums-page.component';
 
 export const baseURL: string = "http://localhost:8080/api/v1";
+export const jsonHeaders: HttpHeaders = new HttpHeaders({
+  'Accept': 'application/json', 
+  'Content-Type': 'application/json'
+});
+
+export function emptyStringsToNull(form: FormGroup){
+  for(const field in form.controls){
+    const control = form.get(field);
+
+    if(control?.value == ''){
+      form.get(field)?.setValue(null);
+    }
+    
+  }
+}
 
 @NgModule({
   declarations: [
@@ -20,7 +37,9 @@ export const baseURL: string = "http://localhost:8080/api/v1";
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
