@@ -98,6 +98,15 @@ public class MuseumServiceImpl implements MuseumService
         String name = params.get("name");
         String city = params.get("city");
 
+        if(name != null && name.equals("null"))
+        {
+            name = null;
+        }
+        if(city != null && city.equals("null"))
+        {
+            city = null;
+        }
+
         List<MuseumEntity> museums = museumsRepository.filterMuseums(name, city);
 
         return museums
