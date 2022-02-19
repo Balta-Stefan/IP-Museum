@@ -10,13 +10,13 @@
                     <a routerLink="/museums" routerLinkActive="active-route">Muzeji</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Vijesti iz kulture</a>
+                    <a routerLink="/news" routerLinkActive="active-route">Vijesti iz kulture</a>
                 </li>
                 <li class="nav-item">
                     <a href="#">Karte</a>
                 </li>
             </ul>
-            <a class="btn btn-danger float-right">Odjava</a>
+            <button class="btn btn-danger float-right" (click)="logout()">Odjava</button>
         </div>
     </div>
 </nav>

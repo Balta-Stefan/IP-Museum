@@ -11,13 +11,12 @@ export class AppComponent {
   title = 'museum-frontend-angular';
 
   constructor(private sessionService: SessionService, private router: Router){
-    /*this.sessionService.authenticate(null, null).subscribe({
+    this.sessionService.authenticate(null, null).subscribe({
       error: () => {
         this.router.navigateByUrl('/login');
       }
     });
 
-    this.router.navigateByUrl('/session_check');*/
-    this.router.navigateByUrl('/register');
+    this.router.navigateByUrl('/session_check');
   }
 }

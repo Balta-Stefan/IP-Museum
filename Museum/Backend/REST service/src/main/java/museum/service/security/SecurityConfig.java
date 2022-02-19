@@ -14,6 +14,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -45,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/index.html", "/", "/css/*", "/js/*").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/user").permitAll()
@@ -70,5 +75,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
 
         return daoAuthenticationProvider;
+    }
+	
+
+
+	@Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        //config.addAllowedOrigin("*");
+        config.setAllowedOriginPatterns(List.of("*"));
+
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "x-auth-token"));
+        config.setExposedHeaders(List.of("x-auth-token"));
+
+        //config.addAllowedHeader("*");
+        //config.addAllowedMethod("*");
+        //config.addAllowedMethod("PATCH");
+        source.registerCorsConfiguration("/**", config);
+        config.setExposedHeaders(List.of("Authorization"));
+        return new CorsFilter(source);
     }
 }

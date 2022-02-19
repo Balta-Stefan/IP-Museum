@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { RssFeedEntry } from 'src/app/models/RssFeedEntry';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-main-page',
@@ -9,11 +11,16 @@ import { RssFeedEntry } from 'src/app/models/RssFeedEntry';
 export class MainPageComponent implements OnInit {
 
 
-  constructor() { 
+  constructor(private sessionService: SessionService, private router: Router) { 
    
   }
 
   ngOnInit(): void {
   }
 
+  logout(): void{
+    this.sessionService.logout();
+
+    this.router.navigateByUrl('/login');
+  }
 }
