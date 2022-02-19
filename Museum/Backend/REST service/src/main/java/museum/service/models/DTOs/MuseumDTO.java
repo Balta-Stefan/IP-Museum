@@ -19,4 +19,6 @@ public class MuseumDTO
 
     @NotNull
     private BigDecimal longitude, latitude;
+	
+	private String thumbnail;
 }

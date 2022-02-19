@@ -9,7 +9,8 @@ import java.util.List;
 public interface MuseumsRepository extends JpaRepository<MuseumEntity, Integer>
 {
     @Query("SELECT m FROM MuseumEntity m WHERE " +
-            "(:name IS NULL OR m.name=:name) AND" +
+			"(:name IS NULL OR m.name=:name) AND" +
+            "(:country IS NULL OR m.country=:country) AND" +
             "(:city IS NULL OR m.city=:city)")
-    List<MuseumEntity> filterMuseums(String name, String city);
+    List<MuseumEntity> filterMuseums(String name, String country, String city);
 }

@@ -96,6 +96,7 @@ public class MuseumServiceImpl implements MuseumService
     public List<MuseumDTO> getMuseums(Map<String, String> params)
     {
         String name = params.get("name");
+		String country = params.get("country");
         String city = params.get("city");
 
         if(name != null && name.equals("null"))
@@ -106,8 +107,13 @@ public class MuseumServiceImpl implements MuseumService
         {
             city = null;
         }
+		 if(country != null && country.equals("null"))
+        {
+            country = null;
+        }
+		
 
-        List<MuseumEntity> museums = museumsRepository.filterMuseums(name, city);
+        List<MuseumEntity> museums = museumsRepository.filterMuseums(name, country, city);
 
         return museums
                 .stream()
