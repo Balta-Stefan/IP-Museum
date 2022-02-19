@@ -15,11 +15,17 @@ export class RegistrationPageComponent implements OnInit {
   registrationStatus: string = "";
   registrationIsSuccessful: boolean = true;
 
+  firstNameError: string = "";
+  lastNameError: string = "";
+  usernameError: string = "";
+  passwordError: string = "";
+  emailError: string = "";
+
   constructor(private fb: FormBuilder, private registrationService: RegistrationService) {
     this.formData = fb.group({
       firstName: [null, Validators.required],
       lastName: [null, Validators.required],
-      username: [null, [Validators.required, Validators.minLength(12), Validators.pattern('[a-zA-Z0-9_-]*')]],
+      username: [null, [Validators.required, Validators.minLength(12)]],
       password: [null, [Validators.required, Validators.minLength(15)]],
       password2: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]]
@@ -34,6 +40,11 @@ export class RegistrationPageComponent implements OnInit {
     }
 
     if(username?.invalid){
+      return false;
+    }
+
+    const pattern = /(.*[#@\\/]{1,}.*)/;
+    if(username.value.match(pattern)){
       return false;
     }
 
@@ -70,31 +81,22 @@ export class RegistrationPageComponent implements OnInit {
 
     const pass1Value: string = pass1.value;
     // check for minimum strength
-    let hasSmallLetter: boolean = false;
-    let hasCapitalLetter: boolean = false;
-    let hasNumbers: boolean = false;
+    const smallLettersRegex = /(.*[a-z]{1,}.*)/;
+    const capitalLettersRegex = /(.*[A-Z]{1,}.*)/;
+    const numbersRegex = /(.*[0-9]{1,}.*)/;
 
-    const smallLettersRegex = /[a-z]/;
-    const capitalLettersRegex = /[A-Z]/;
-    const numbersRegex = /[0-9]/;
-
-    for(let i = 0; i < pass1Value.length; i++){
-      if(pass1Value.charAt(i).match(smallLettersRegex)){
-        hasSmallLetter = true;
-      }
-      if(pass1Value.charAt(i).match(capitalLettersRegex)){
-        hasCapitalLetter = true;
-      }
-      if(pass1Value.charAt(i).match(numbersRegex)){
-        hasNumbers = true;
-      }
+    if(!pass1Value.match(smallLettersRegex)){
+      return false;
+    }
+    if(!pass1Value.match(capitalLettersRegex)){
+      return false;
+    }
+    if(!pass1Value.match(numbersRegex)){
+      return false;
     }
 
-    if(hasSmallLetter && hasCapitalLetter && hasNumbers){
-      return true;
-    }
 
-    return false;
+    return true;
   }
 
   isPassword2Valid(): boolean{
@@ -114,18 +116,38 @@ export class RegistrationPageComponent implements OnInit {
   }
 
   register(): void{
-    let userData = this.formData.value;
+    let userData = JSON.parse(JSON.stringify(this.formData.value));
 
     delete userData.password2;
 
-    const params: HttpParams = new HttpParams({
-      fromObject: userData
-    });
+    this.registrationService.register(userData).subscribe({
+      error: (response: any) => {
+        if(response?.status == 409){
+          this.registrationStatus = "Zadani podaci se podudaraju sa postojećim korisnikom.";
+          this.registrationIsSuccessful = false;
+        }
+        else{
+          this.registrationStatus = "Registracija neuspješna";
+          this.registrationIsSuccessful = false;  
+        }
 
-    this.registrationService.register(params).subscribe({
-      error: () => {
-        this.registrationStatus = "Registracija neuspješna";
-        this.registrationIsSuccessful = false;
+        if(response?.error?.firstName){
+          this.firstNameError = response.error.firstName;
+        }
+        if(response?.error?.lastName){
+          this.lastNameError = response.error.lastName;
+        }
+        if(response?.error?.password){
+          this.passwordError = response.error.password;
+        }
+        if(response?.error?.email){
+          this.emailError = response.error.email;
+        }
+        if(response?.error?.username){
+          this.usernameError = response.error.username;
+        }
+
+        console.log(response);
       },
       complete: () => {
         this.registrationStatus = "Registracija uspješna";

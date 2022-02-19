@@ -13,6 +13,10 @@ public class CustomPasswordValidator implements ConstraintValidator<ValidPasswor
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext)
     {
+		if(s == null)
+		{
+			return false;
+		}
         if(s.trim().length() < 15)
         {
             return false;

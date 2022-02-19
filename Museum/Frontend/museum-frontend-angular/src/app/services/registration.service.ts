@@ -10,9 +10,9 @@ export class RegistrationService {
 
   constructor(private http: HttpClient) { }
 
-  register(params: HttpParams): Observable<any>{
-    return this.http.post<any>(`${baseURL}/register`,{
-      params: params
+  register(params: any): Observable<any>{
+    return this.http.post<any>(`${baseURL}/user`, params, {
+      headers: jsonHeaders
     });
   }
 }

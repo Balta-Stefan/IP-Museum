@@ -15,14 +15,12 @@ public class UserDTO
 {
     private Integer userID;
 
-    @NotBlank
     @ValidUsername
     private String username;
 
     @NotBlank
     private String firstName, lastName;
 
-    @NotBlank
     @ValidPassword
     private String password;
 

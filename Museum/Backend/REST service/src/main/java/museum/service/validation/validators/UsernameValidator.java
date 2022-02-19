@@ -12,6 +12,10 @@ public class UsernameValidator implements ConstraintValidator<ValidUsername, Str
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext)
     {
+		if(s == null)
+		{
+			return false;
+		}
         if(s.trim().length() < 12)
         {
             return false;
