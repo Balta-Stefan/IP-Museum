@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule, HttpHeaders} from '@angular/common/http';
+import {HttpClientModule, HttpHeaders, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -13,6 +13,8 @@ import { MuseumOverviewComponent } from './components/museum-overview/museum-ove
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { SessionCheckComponent } from './components/session-check/session-check.component';
 import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
+import { HttpInterceptor } from './HttpInterceptor';
+import { RssFeedPageComponent } from './components/rss-feed-page/rss-feed-page.component';
 
 export const baseURL: string = "http://localhost:8000/api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
@@ -41,7 +43,8 @@ export function emptyStringsToNull(form: FormGroup){
     MuseumOverviewComponent,
     LoginPageComponent,
     SessionCheckComponent,
-    RegistrationPageComponent
+    RegistrationPageComponent,
+    RssFeedPageComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,13 @@ export function emptyStringsToNull(form: FormGroup){
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

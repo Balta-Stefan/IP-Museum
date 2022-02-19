@@ -7,6 +7,7 @@ import { MuseumOverviewComponent } from './components/museum-overview/museum-ove
 import { MuseumsPageComponent } from './components/museums-page/museums-page.component';
 import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.component';
+import { RssFeedPageComponent } from './components/rss-feed-page/rss-feed-page.component';
 import { SessionCheckComponent } from './components/session-check/session-check.component';
 
 const routes: Routes = [
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: 'museums/:id',
         component: MuseumOverviewComponent
+      },
+      {
+        path: "news",
+        component: RssFeedPageComponent
       }
     ]
   },
