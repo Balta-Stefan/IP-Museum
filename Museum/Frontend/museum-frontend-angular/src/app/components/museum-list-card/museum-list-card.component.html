@@ -12,9 +12,9 @@
                     <p class="card-text">Država: {{museum?.country}}</p>
                     <p class="card-text">Grad: {{museum?.city}}</p>
                     <p class="card-text">Adresa: {{museum?.address}}</p>
-                    <p class="card-text">Tip: {{museum?.type}}</p>
+                    <p class="card-text">Tip: {{museum?.type?.type}}</p>
                 </div>
-                <a routerLink="/{{museum?.museumID}}" class="btn btn-primary">Provjeri</a>
+                <a routerLink="/museums/{{museum?.museumID}}" class="btn btn-primary">Provjeri</a>
             </div>
         </div>
     </div>

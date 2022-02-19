@@ -45,14 +45,13 @@ public class MuseumEntity
     private BigDecimal longitude;
 
     @Basic
-    @Column(name = "type", nullable = false, length = 45)
-    private String type;
-
-    @Basic
     @Column(name = "thumbnail", length = 255)
     private String thumbnail;
 
     @OneToMany(mappedBy = "museum")
     private List<TourEntity> tours;
 
+    @ManyToOne
+    @JoinColumn(name = "type", referencedColumnName = "museumTypeID", nullable = false)
+    private MuseumTypeEntity museumType;
 }

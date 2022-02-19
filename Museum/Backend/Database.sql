@@ -14,6 +14,19 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE SCHEMA IF NOT EXISTS `museum` DEFAULT CHARACTER SET utf8 ;
 USE `museum` ;
 
+
+
+-- -----------------------------------------------------
+-- Table `museum`.`MuseumTypes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `museum`.`MuseumTypes` (
+  `museumTypeID` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`museumTypeID`))
+ENGINE = InnoDB;
+
+
+
 -- -----------------------------------------------------
 -- Table `museum`.`Museums`
 -- -----------------------------------------------------
@@ -27,8 +40,14 @@ CREATE TABLE IF NOT EXISTS `museum`.`Museums` (
   `latitude` DECIMAL(10,8) NOT NULL,
   `longitude` DECIMAL(10,8) NOT NULL,
   `thumbnail` VARCHAR(255) NULL,
-  `type` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`museumID`))
+  `type` INT NOT NULL,
+  PRIMARY KEY (`museumID`),
+  INDEX `type_idx` (`type` ASC) VISIBLE,
+  CONSTRAINT `museums_type_FK`
+    FOREIGN KEY (`type`)
+    REFERENCES `museum`.`MuseumTypes` (`museumTypeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 

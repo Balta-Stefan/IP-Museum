@@ -1,3 +1,5 @@
+import { MuseumType } from "./MuseumType";
+
 export interface MuseumDTO{
     museumID: number;
     name: string;
@@ -5,8 +7,8 @@ export interface MuseumDTO{
     phone: string;
     city: string;
     country: string;
-    type: string;
     longitude: number;
     latitude: number;
     thumbnail: string;
+    type: MuseumType;
 }

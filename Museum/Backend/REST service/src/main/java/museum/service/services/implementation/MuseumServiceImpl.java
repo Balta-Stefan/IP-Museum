@@ -1,19 +1,15 @@
 package museum.service.services.implementation;
 
+import museum.service.exceptions.ConflictException;
 import museum.service.exceptions.NotFoundException;
 import museum.service.models.DTOs.MuseumDTO;
+import museum.service.models.DTOs.MuseumTypeDTO;
 import museum.service.models.DTOs.TourDTO;
-import museum.service.models.entities.MuseumEntity;
-import museum.service.models.entities.TourEntity;
-import museum.service.models.entities.TourpurchaseEntity;
-import museum.service.models.entities.UserEntity;
+import museum.service.models.entities.*;
 import museum.service.models.requests.PaymentRequest;
 import museum.service.models.responses.PaymentRequestResponse;
+import museum.service.repositories.*;
 import museum.service.services.MuseumService;
-import museum.service.repositories.MuseumsRepository;
-import museum.service.repositories.TourTicketsRepository;
-import museum.service.repositories.ToursRepository;
-import museum.service.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +34,7 @@ public class MuseumServiceImpl implements MuseumService
     private final UserRepository userRepository;
     private final MuseumsRepository museumsRepository;
     private final TourTicketsRepository tourTicketsRepository;
+    private final MuseumTypeRepository museumTypeRepository;
 
     private final ModelMapper modelMapper;
 
@@ -52,12 +50,13 @@ public class MuseumServiceImpl implements MuseumService
     @Value("${bank_url}")
     private String bank_url;
 
-    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, ModelMapper modelMapper)
+    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, ModelMapper modelMapper)
     {
         this.toursRepository = toursRepository;
         this.userRepository = userRepository;
         this.museumsRepository = museumsRepository;
         this.tourTicketsRepository = tourTicketsRepository;
+        this.museumTypeRepository = museumTypeRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -139,6 +138,33 @@ public class MuseumServiceImpl implements MuseumService
         return tours
                 .stream()
                 .map(t -> modelMapper.map(t, TourDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public MuseumTypeDTO addMuseumType(@Valid MuseumTypeDTO typeDTO)
+    {
+        MuseumTypeEntity museumTypeEntity = modelMapper.map(typeDTO, MuseumTypeEntity.class);
+        museumTypeEntity.setMuseumTypeID(null);
+
+        typeDTO.setType(typeDTO.getType().trim());
+        if(museumTypeRepository.findByTypeIgnoreCase(typeDTO.getType()).isPresent())
+        {
+            throw new ConflictException();
+        }
+
+        museumTypeEntity = museumTypeRepository.saveAndFlush(museumTypeEntity);
+
+        return modelMapper.map(museumTypeEntity, MuseumTypeDTO.class);
+    }
+
+    @Override
+    public List<MuseumTypeDTO> getMuseumTypes()
+    {
+        return museumTypeRepository
+                .findAll()
+                .stream()
+                .map(t -> modelMapper.map(t, MuseumTypeDTO.class))
                 .collect(Collectors.toList());
     }
 }

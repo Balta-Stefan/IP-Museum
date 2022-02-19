@@ -21,4 +21,6 @@ public class MuseumDTO
     private BigDecimal longitude, latitude;
 	
 	private String thumbnail;
+	
+	private MuseumTypeDTO type;
 }
