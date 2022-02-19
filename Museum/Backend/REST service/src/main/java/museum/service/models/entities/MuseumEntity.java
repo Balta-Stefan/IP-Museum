@@ -48,6 +48,10 @@ public class MuseumEntity
     @Column(name = "thumbnail", length = 255)
     private String thumbnail;
 
+    @Basic
+    @Column(name = "countryAlpha2Code", length = 2, nullable = false)
+    private String countryAlpha2Code;
+
     @OneToMany(mappedBy = "museum")
     private List<TourEntity> tours;
 

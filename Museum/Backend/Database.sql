@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `museum`.`Museums` (
   `longitude` DECIMAL(10,8) NOT NULL,
   `thumbnail` VARCHAR(255) NULL,
   `type` INT NOT NULL,
+  `countryAlpha2Code` CHAR(2) NOT NULL,
   PRIMARY KEY (`museumID`),
   INDEX `type_idx` (`type` ASC) VISIBLE,
   CONSTRAINT `museums_type_FK`

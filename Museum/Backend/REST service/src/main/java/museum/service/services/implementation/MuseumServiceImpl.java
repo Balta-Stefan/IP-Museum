@@ -2,14 +2,14 @@ package museum.service.services.implementation;
 
 import museum.service.exceptions.ConflictException;
 import museum.service.exceptions.NotFoundException;
-import museum.service.models.DTOs.MuseumDTO;
-import museum.service.models.DTOs.MuseumTypeDTO;
-import museum.service.models.DTOs.TourDTO;
+import museum.service.models.DTOs.*;
 import museum.service.models.entities.*;
 import museum.service.models.requests.PaymentRequest;
 import museum.service.models.responses.PaymentRequestResponse;
 import museum.service.repositories.*;
+import museum.service.services.CountriesService;
 import museum.service.services.MuseumService;
+import museum.service.services.WeatherService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -22,8 +22,10 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +37,8 @@ public class MuseumServiceImpl implements MuseumService
     private final MuseumsRepository museumsRepository;
     private final TourTicketsRepository tourTicketsRepository;
     private final MuseumTypeRepository museumTypeRepository;
+    private final CountriesService countriesService;
+    private final WeatherService weatherService;
 
     private final ModelMapper modelMapper;
 
@@ -50,13 +54,17 @@ public class MuseumServiceImpl implements MuseumService
     @Value("${bank_url}")
     private String bank_url;
 
-    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, ModelMapper modelMapper)
+
+
+    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, CountriesService countriesService, WeatherService weatherService, ModelMapper modelMapper)
     {
         this.toursRepository = toursRepository;
         this.userRepository = userRepository;
         this.museumsRepository = museumsRepository;
         this.tourTicketsRepository = tourTicketsRepository;
         this.museumTypeRepository = museumTypeRepository;
+        this.countriesService = countriesService;
+        this.weatherService = weatherService;
         this.modelMapper = modelMapper;
     }
 
@@ -166,5 +174,47 @@ public class MuseumServiceImpl implements MuseumService
                 .stream()
                 .map(t -> modelMapper.map(t, MuseumTypeDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WeatherDTO> getWeather(Integer museumID)
+    {
+        MuseumEntity museum = museumsRepository.findById(museumID).orElseThrow(NotFoundException::new);
+        List<RegionDTO> regions = countriesService.getRegions(museum.getCountryAlpha2Code());
+
+        Random rnd = new Random();
+        RegionDTO randomRegion = regions.get(rnd.nextInt(regions.size()));
+
+        List<CityDTO> cities = countriesService.getCities(museum.getCountryAlpha2Code(), randomRegion.getRegion());
+        List<CityDTO> randomCities = new ArrayList<>();
+
+        final int numOfCitiesToSelect = 3;
+
+        if(cities.size() <= numOfCitiesToSelect)
+        {
+            randomCities = cities;
+        }
+        else
+        {
+            while(randomCities.size() < numOfCitiesToSelect)
+            {
+                CityDTO tempCity = cities.get(rnd.nextInt(cities.size()));
+                if(randomCities.contains(tempCity))
+                {
+                    continue;
+                }
+
+                randomCities.add(tempCity);
+            }
+        }
+
+        List<WeatherDTO> weathers = new ArrayList<>(numOfCitiesToSelect);
+        randomCities.forEach(c ->
+        {
+            weathers.add(weatherService.getWeather(c.getLatitude(), c.getLongitude()));
+        });
+
+
+        return weathers;
     }
 }

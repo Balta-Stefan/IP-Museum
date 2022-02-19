@@ -4,6 +4,7 @@ import museum.service.models.CustomUserDetails;
 import museum.service.models.DTOs.MuseumDTO;
 import museum.service.models.DTOs.MuseumTypeDTO;
 import museum.service.models.DTOs.TourDTO;
+import museum.service.models.DTOs.WeatherDTO;
 import museum.service.models.entities.MuseumTypeEntity;
 import museum.service.services.MuseumService;
 import org.springframework.security.core.Authentication;
@@ -54,5 +55,11 @@ public class MuseumController
     public MuseumDTO getMuseum(@PathVariable(name = "id") Integer museumID)
     {
         return museumService.getMuseum(museumID);
+    }
+
+    @GetMapping("/{museumID}/weather")
+    public List<WeatherDTO> getWeathers(@PathVariable Integer museumID)
+    {
+        return museumService.getWeather(museumID);
     }
 }
