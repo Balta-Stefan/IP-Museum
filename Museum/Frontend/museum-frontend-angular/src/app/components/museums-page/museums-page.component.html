@@ -1,16 +1,20 @@
 <div class="vh-100">
     <div class="row">
         <form class="row g-2" [formGroup]="filterForm" (submit)="submitFilters()">
-            <div class="offset-md-3 col-md-3">
+            <div class="offset-md-3 col-md-2">
                 <label for="name" class="form-label">Naziv muzeja</label>
                 <input formControlName="name" type="text" class="form-control" id="name" placeholder="Unesite naziv muzeja">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label for="country" class="form-label">Država</label>
+                <input formControlName="country" type="text" class="form-control" id="country" placeholder="Unesite ime države">
+            </div>
+            <div class="col-md-2">
                 <label for="city" class="form-label">Grad</label>
                 <input formControlName="city" type="text" class="form-control" id="city" placeholder="Unesite ime grada">
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label">&nbsp;</label>
                 <button type="submit" class="btn btn-primary" style="display: block">Filtriraj</button>
             </div>

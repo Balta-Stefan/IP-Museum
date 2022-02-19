@@ -12,7 +12,7 @@ export class MuseumService {
   constructor(private client: HttpClient) { }
 
   getMuseums(params?: HttpParams): Observable<MuseumDTO[]>{
-    return this.client.get<MuseumDTO[]>(`${baseURL}/museums`,
+    return this.client.get<MuseumDTO[]>(`${baseURL}/museum`,
     {
       headers: jsonHeaders,
       params: params
@@ -20,7 +20,7 @@ export class MuseumService {
   }
 
   getMuseum(id: number): Observable<MuseumDTO>{
-    return this.client.get<MuseumDTO>(`${baseURL}/museums/${id}`,
+    return this.client.get<MuseumDTO>(`${baseURL}/museum/${id}`,
     {
       headers: jsonHeaders
     });

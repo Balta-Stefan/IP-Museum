@@ -21,6 +21,7 @@ export class MuseumsPageComponent implements OnInit {
     
       this.filterForm = fb.group({
         name: null,
+        country: null,
         city: null
       });
   }
