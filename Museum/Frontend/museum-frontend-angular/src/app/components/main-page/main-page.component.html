@@ -15,6 +15,9 @@
                 <li class="nav-item">
                     <a href="#">Karte</a>
                 </li>
+                <li *ngIf="adminMenu" class="nav-item">
+                    <a href="#">Administratorski panel</a>
+                </li>
             </ul>
             <button class="btn btn-danger float-right" (click)="logout()">Odjava</button>
         </div>

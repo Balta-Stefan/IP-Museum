@@ -1,7 +1,8 @@
 package museum.service.controllers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import museum.service.models.CustomUserDetails;
+import museum.service.models.DTOs.LoginDetailsDTO;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +14,13 @@ import javax.servlet.http.HttpSession;
 public class SessionController
 {
     @PostMapping("login")
-    public ResponseEntity checkSessionStatus()
+    public LoginDetailsDTO checkSessionStatus(Authentication authentication)
     {
-        return new ResponseEntity(HttpStatus.OK);
+        CustomUserDetails userDetails = (CustomUserDetails)(authentication.getPrincipal());
+
+        LoginDetailsDTO loginDetailsDTO = new LoginDetailsDTO(userDetails.getId(), userDetails.getRole());
+
+        return loginDetailsDTO;
     }
 
     @PostMapping("logout")

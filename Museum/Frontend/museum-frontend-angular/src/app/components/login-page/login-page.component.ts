@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginDetails } from 'src/app/models/LoginDetails';
+import { AuthorizationUtils } from 'src/app/services/AuthorizationUtil';
 import { SessionService } from 'src/app/services/session.service';
 
 @Component({
@@ -29,9 +31,11 @@ export class LoginPageComponent implements OnInit {
       error: () => {
         this.loginMessage = "Prijava neuspješna";
       },
-      complete: () => {
+      next: (receivedObject: LoginDetails) => {
+        AuthorizationUtils.userLogin(receivedObject);
         this.router.navigateByUrl('');
       }
+     
     });
   }
 }

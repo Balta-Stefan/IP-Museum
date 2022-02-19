@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginDetails } from 'src/app/models/LoginDetails';
 import { RssFeedEntry } from 'src/app/models/RssFeedEntry';
+import { UserRole } from 'src/app/models/UserRole';
+import { AuthorizationUtils } from 'src/app/services/AuthorizationUtil';
 import { SessionService } from 'src/app/services/session.service';
 
 @Component({
@@ -10,9 +13,14 @@ import { SessionService } from 'src/app/services/session.service';
 })
 export class MainPageComponent implements OnInit {
 
+  adminMenu: boolean = false;
 
   constructor(private sessionService: SessionService, private router: Router) { 
-   
+   const userDetails: LoginDetails | null = AuthorizationUtils.getUser();
+
+   if(userDetails && userDetails.role == UserRole.ADMIN.toString()){
+     this.adminMenu = true;
+   }
   }
 
   ngOnInit(): void {

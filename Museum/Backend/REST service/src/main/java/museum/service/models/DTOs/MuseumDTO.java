@@ -14,9 +14,6 @@ public class MuseumDTO
     @NotBlank
     private String name, address, phone, city, country;
 
-    @NotBlank
-    private String type;
-
     @NotNull
     private BigDecimal longitude, latitude;
 	
