@@ -1,5 +1,6 @@
 package museum.service.services.implementation;
 
+import museum.service.exceptions.BadRequestException;
 import museum.service.exceptions.ConflictException;
 import museum.service.exceptions.ForbiddenException;
 import museum.service.exceptions.NotFoundException;
@@ -23,6 +24,8 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Transactional
 @Service
@@ -69,7 +72,7 @@ public class UserServiceImpl implements UserService
     @Override
     public UserDTO createUser(UserDTO userToCreate, Optional<CustomUserDetails> requester)
     {
-        if(userToCreate == null)
+        if(userToCreate.getRole() == null)
         {
             userToCreate.setRole(Roles.USER);
         }

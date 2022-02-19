@@ -2,6 +2,8 @@ package museum.service.models.DTOs;
 
 import lombok.Data;
 import museum.service.models.enums.Roles;
+import museum.service.validation.annotations.ValidPassword;
+import museum.service.validation.annotations.ValidUsername;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,7 +16,15 @@ public class UserDTO
     private Integer userID;
 
     @NotBlank
-    private String firstName, lastName, username, password;
+    @ValidUsername
+    private String username;
+
+    @NotBlank
+    private String firstName, lastName;
+
+    @NotBlank
+    @ValidPassword
+    private String password;
 
     @NotBlank
     @Email
