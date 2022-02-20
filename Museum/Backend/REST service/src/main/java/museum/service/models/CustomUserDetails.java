@@ -18,14 +18,17 @@ public class CustomUserDetails implements UserDetails
     private final Boolean active;
     private final Roles role;
     private final List<GrantedAuthority> authorities = new ArrayList<>(1);
+    private final UserDTO userDTO;
 
-    public CustomUserDetails(Integer id, String username, String password, Boolean active, Roles role)
+    public CustomUserDetails(UserDTO userDTO)
     {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.role = role;
+        this.userDTO = userDTO;
+        this.role = userDTO.getRole();
+        this.username = userDTO.getUsername();
+        this.id = userDTO.getUserID();
+        this.password = userDTO.getPassword();
+        this.active = userDTO.getActive();
+
 
         authorities.add(new SimpleGrantedAuthority(role.name()));
     }

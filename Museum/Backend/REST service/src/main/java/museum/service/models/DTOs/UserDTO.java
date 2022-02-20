@@ -32,5 +32,5 @@ public class UserDTO
 
     private Boolean active;
 
-    private List<AccessTokenDTO> tokens;
+    private AccessTokenDTO token;
 }

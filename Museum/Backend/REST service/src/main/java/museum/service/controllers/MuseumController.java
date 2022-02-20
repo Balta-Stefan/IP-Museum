@@ -5,12 +5,10 @@ import museum.service.models.DTOs.MuseumDTO;
 import museum.service.models.DTOs.MuseumTypeDTO;
 import museum.service.models.DTOs.TourDTO;
 import museum.service.models.DTOs.WeatherDTO;
-import museum.service.models.entities.MuseumTypeEntity;
 import museum.service.services.MuseumService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +27,12 @@ public class MuseumController
     public List<TourDTO> getMuseumTours(@PathVariable Integer museumID)
     {
         return museumService.getTours(museumID);
+    }
+
+    @GetMapping("{museumID}/tour/{tourID}")
+    public TourDTO getTour(@PathVariable Integer museumID, @PathVariable Integer tourID)
+    {
+        return museumService.getTour(museumID, tourID);
     }
 
     @GetMapping("/type")

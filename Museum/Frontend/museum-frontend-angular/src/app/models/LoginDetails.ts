@@ -1,6 +1,13 @@
 import { UserRole } from "./UserRole";
 
 export interface LoginDetails{
-    id: number;
+    userID: number;
+    username: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    email: string;
     role: string;
+    active: boolean;
+    token: string;
 }
