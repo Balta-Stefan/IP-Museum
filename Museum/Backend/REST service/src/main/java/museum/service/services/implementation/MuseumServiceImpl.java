@@ -4,7 +4,6 @@ import museum.service.exceptions.ConflictException;
 import museum.service.exceptions.NotFoundException;
 import museum.service.models.DTOs.*;
 import museum.service.models.entities.*;
-import museum.service.models.enums.StaticResourceLocationType;
 import museum.service.models.requests.PaymentRequest;
 import museum.service.models.responses.PaymentRequestResponse;
 import museum.service.repositories.*;
@@ -54,9 +53,6 @@ public class MuseumServiceImpl implements MuseumService
 
     @Value("${bank_url}")
     private String bank_url;
-
-    @Value("${static_content_prefix}")
-    private String static_content_prefix;
 
 
     public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, CountriesService countriesService, WeatherService weatherService, ModelMapper modelMapper)
@@ -139,17 +135,6 @@ public class MuseumServiceImpl implements MuseumService
         return modelMapper.map(museum, MuseumDTO.class);
     }
 
-    private void preprocessTourStaticContent(TourDTO tour)
-    {
-        for(TourStaticContentDTO t : tour.getStaticContent())
-        {
-            if(t.getLocationType().equals(StaticResourceLocationType.LOCAL))
-            {
-                t.setURI(static_content_prefix + t.getURI());
-            }
-        }
-    }
-
     @Override
     public List<TourDTO> getTours(Integer museumID)
     {
@@ -162,10 +147,6 @@ public class MuseumServiceImpl implements MuseumService
                 .map(t -> modelMapper.map(t, TourDTO.class))
                 .collect(Collectors.toList());
 
-        for(TourDTO t : tourDTOs)
-        {
-            preprocessTourStaticContent(t);
-        }
 
         return tourDTOs;
     }
@@ -176,7 +157,6 @@ public class MuseumServiceImpl implements MuseumService
         TourEntity tour = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
 
         TourDTO tempDTO = modelMapper.map(tour, TourDTO.class);
-        preprocessTourStaticContent(tempDTO);
 
         return tempDTO;
     }
@@ -248,5 +228,18 @@ public class MuseumServiceImpl implements MuseumService
 
 
         return weathers;
+    }
+
+    @Override
+    public void addStaticContent(Integer tourID, List<TourStaticContentDTO> staticContentDTOS)
+    {
+        TourEntity tourEntity = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
+        List<TourStaticContent> staticContent = staticContentDTOS.stream()
+                .map(s -> modelMapper.map(s, TourStaticContent.class))
+                .toList();
+        staticContent.forEach(s -> s.setStaticContentID(null));
+
+        tourEntity.getStaticContent().addAll(staticContent);
+        toursRepository.saveAndFlush(tourEntity);
     }
 }

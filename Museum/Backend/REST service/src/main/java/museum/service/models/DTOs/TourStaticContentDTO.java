@@ -1,7 +1,7 @@
 package museum.service.models.DTOs;
 
 import lombok.Data;
-import museum.service.models.enums.StaticResourceLocationType;
+import museum.service.models.enums.StaticResourceType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,8 +15,5 @@ public class TourStaticContentDTO
     private String URI;
 
     @NotNull
-    private StaticResourceLocationType locationType;
-
-    @NotNull
-    private StaticResourceLocationType resourceType;
+    private StaticResourceType resourceType;
 }

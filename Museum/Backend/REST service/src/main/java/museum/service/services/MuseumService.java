@@ -1,10 +1,7 @@
 package museum.service.services;
 
 
-import museum.service.models.DTOs.MuseumDTO;
-import museum.service.models.DTOs.MuseumTypeDTO;
-import museum.service.models.DTOs.TourDTO;
-import museum.service.models.DTOs.WeatherDTO;
+import museum.service.models.DTOs.*;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +18,5 @@ public interface MuseumService
     List<MuseumTypeDTO> getMuseumTypes();
 
     List<WeatherDTO> getWeather(Integer museumID);
+    void addStaticContent(Integer tourID, List<TourStaticContentDTO> staticContentDTOS);
 }

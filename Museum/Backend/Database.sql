@@ -118,12 +118,11 @@ ENGINE = InnoDB;
 -- Table `museum`.`TourStaticContent`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `museum`.`TourStaticContent` (
-  `staticContentID` INT NOT NULL AUTO_INCREMENT,
+  `tourStaticContentID` INT NOT NULL AUTO_INCREMENT,
   `URI` VARCHAR(255) NOT NULL,
   `tour` INT NOT NULL,
-  `locationType` VARCHAR(45) NOT NULL,
-  `resourceType` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`staticContentID`),
+  `type` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`tourStaticContentID`),
   INDEX `tour_idx` (`tour` ASC) VISIBLE,
   CONSTRAINT `tour_static_content_tour_FK`
     FOREIGN KEY (`tour`)

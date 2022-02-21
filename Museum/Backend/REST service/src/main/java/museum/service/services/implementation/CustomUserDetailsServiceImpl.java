@@ -31,18 +31,11 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService
             throw new UsernameNotFoundException("Username not found");
         });
 
-        try
-        {
-            UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+   
+		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 
-            System.out.println(userDTO.toString());
-            CustomUserDetails userDetails = new CustomUserDetails(userDTO);
-            return userDetails;
-        }
-        catch(Exception e){e.printStackTrace();}
-
-
-
-        return null;
+		CustomUserDetails userDetails = new CustomUserDetails(userDTO);
+		return userDetails;
+       
     }
 }
