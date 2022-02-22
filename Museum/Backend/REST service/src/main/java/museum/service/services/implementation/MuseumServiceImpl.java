@@ -1,6 +1,7 @@
 package museum.service.services.implementation;
 
 import museum.service.exceptions.ConflictException;
+import museum.service.exceptions.ForbiddenException;
 import museum.service.exceptions.NotFoundException;
 import museum.service.models.DTOs.*;
 import museum.service.models.entities.*;
@@ -22,10 +23,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,13 +66,12 @@ public class MuseumServiceImpl implements MuseumService
     }
 
     @Override
-    public String buyTicket(Integer tourID, Integer buyerID)
+    public TicketPurchaseResponse buyTicket(Integer tourID, Integer buyerID)
     {
         TourEntity tourEntity = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
         UserEntity user = userRepository.findById(buyerID).orElseThrow(NotFoundException::new);
 
         TourpurchaseEntity tourpurchaseEntity = new TourpurchaseEntity();
-        tourpurchaseEntity.setPurchaseId(null);
         tourpurchaseEntity.setTour(tourEntity);
         tourpurchaseEntity.setPurchased(LocalDateTime.now());
         tourpurchaseEntity.setUser(user);
@@ -95,7 +92,7 @@ public class MuseumServiceImpl implements MuseumService
                 .timeout(Duration.ofSeconds(6))
                 .block();
 
-        return paymentResponse.getRedirectURL();
+        return new TicketPurchaseResponse(paymentResponse.getRedirectURL(), tourpurchaseEntity.getPurchaseId().toString());
     }
 
     @Override
@@ -136,27 +133,63 @@ public class MuseumServiceImpl implements MuseumService
     }
 
     @Override
-    public List<TourDTO> getTours(Integer museumID)
+    public List<TourDTO> getTours(Integer museumID, Integer userID)
     {
         MuseumEntity museum = museumsRepository.findById(museumID).orElseThrow(NotFoundException::new);
 
-        List<TourEntity> tours = toursRepository.findAllByMuseum(museum);
+        List<TourEntity> tours = toursRepository.findAllUnfinishedTours(museumID, LocalDateTime.now());
 
         List<TourDTO> tourDTOs = tours
                 .stream()
                 .map(t -> modelMapper.map(t, TourDTO.class))
                 .collect(Collectors.toList());
 
+        // determine for which tours the user owns a ticket
+        tourDTOs.forEach(t ->
+        {
+            Optional<TourpurchaseEntity> tourpurchase = tourTicketsRepository.findTicket(t.getTourID(), userID);
+
+            if(tourpurchase.isPresent())
+            {
+                TourpurchaseEntity purchase = tourpurchase.get();
+                t.setPurchased(purchase.getPurchased());
+                t.setPaid(purchase.getPaid());
+            }
+        });
+
+        tours.forEach(t -> t.setStaticContent(null));
 
         return tourDTOs;
     }
 
     @Override
-    public TourDTO getTour(Integer museumID, Integer tourID)
+    public TourDTO getTour(Integer museumID, Integer tourID, Integer requesterID)
     {
+        // determine whether the user can access the tour
+        Optional<TourpurchaseEntity> tourPurchase = tourTicketsRepository.findTicket(tourID, requesterID);
+
         TourEntity tour = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
 
+
         TourDTO tempDTO = modelMapper.map(tour, TourDTO.class);
+
+        // if the tour hasn't started or the user hasn't purchased the ticket, don't give static content
+        if(tourPurchase.isPresent())
+        {
+            TourpurchaseEntity purchase = tourPurchase.get();
+
+            tempDTO.setPurchased(purchase.getPurchased());
+            tempDTO.setPaid(purchase.getPaid());
+
+            if(LocalDateTime.now().isBefore(tour.getStartTimestamp()))
+            {
+                tempDTO.setStaticContent(null);
+            }
+        }
+        else
+        {
+            tempDTO.setStaticContent(null);
+        }
 
         return tempDTO;
     }

@@ -20,5 +20,8 @@ public class TourDTO
     @NotNull
     private BigDecimal price;
 
+    private LocalDateTime purchased;
+    private LocalDateTime paid;
+
     private List<TourStaticContentDTO> staticContent;
 }

@@ -1,10 +1,7 @@
 package museum.service.controllers;
 
 import museum.service.models.CustomUserDetails;
-import museum.service.models.DTOs.MuseumDTO;
-import museum.service.models.DTOs.MuseumTypeDTO;
-import museum.service.models.DTOs.TourDTO;
-import museum.service.models.DTOs.WeatherDTO;
+import museum.service.models.DTOs.*;
 import museum.service.services.MuseumService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +21,18 @@ public class MuseumController
     }
 
     @GetMapping("{museumID}/tour")
-    public List<TourDTO> getMuseumTours(@PathVariable Integer museumID)
+    public List<TourDTO> getMuseumTours(@PathVariable Integer museumID, Authentication authentication)
     {
-        return museumService.getTours(museumID);
+        CustomUserDetails userDetails = (CustomUserDetails)(authentication.getPrincipal());
+
+        return museumService.getTours(museumID, userDetails.getId());
     }
 
     @GetMapping("{museumID}/tour/{tourID}")
-    public TourDTO getTour(@PathVariable Integer museumID, @PathVariable Integer tourID)
+    public TourDTO getTour(@PathVariable Integer museumID, @PathVariable Integer tourID, Authentication authentication)
     {
-        return museumService.getTour(museumID, tourID);
+        CustomUserDetails userDetails = (CustomUserDetails)(authentication.getPrincipal());
+        return museumService.getTour(museumID, tourID, userDetails.getId());
     }
 
     @GetMapping("/type")
@@ -42,7 +42,7 @@ public class MuseumController
     }
 
     @PostMapping("/{museumID}/tour/{tourID}/tickets")
-    public String buyTicket(@PathVariable Integer museumID, @PathVariable Integer tourID, Authentication authentication)
+    public TicketPurchaseResponse buyTicket(@PathVariable Integer museumID, @PathVariable Integer tourID, Authentication authentication)
     {
         CustomUserDetails userDetails = (CustomUserDetails)(authentication.getPrincipal());
 
