@@ -24,6 +24,10 @@ public class TourpurchaseEntity
     @Column(name = "paid")
     private LocalDateTime paid;
 
+    @Basic
+    @Column(name = "paymentURL", nullable = true, length = 255)
+    private String paymentURL;
+
     @ManyToOne
     @JoinColumn(name = "tour", referencedColumnName = "tourID", nullable = false)
     private TourEntity tour;

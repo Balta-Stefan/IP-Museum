@@ -71,6 +71,19 @@ public class MuseumServiceImpl implements MuseumService
         TourEntity tourEntity = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
         UserEntity user = userRepository.findById(buyerID).orElseThrow(NotFoundException::new);
 
+        // one user can have only one ticket
+        Optional<TourpurchaseEntity> purchaseEntity = tourTicketsRepository.findTicket(tourID, buyerID);
+        if(purchaseEntity.isPresent())
+        {
+            TourpurchaseEntity tempEnt = purchaseEntity.get();
+            // if the ticket has already been paid, return 409
+            if(tempEnt.getPaid() != null)
+            {
+                throw new ConflictException();
+            }
+            return new TicketPurchaseResponse(tempEnt.getPaymentURL(), tempEnt.getPurchaseId().toString());
+        }
+
         TourpurchaseEntity tourpurchaseEntity = new TourpurchaseEntity();
         tourpurchaseEntity.setTour(tourEntity);
         tourpurchaseEntity.setPurchased(LocalDateTime.now());
@@ -91,6 +104,9 @@ public class MuseumServiceImpl implements MuseumService
                 .bodyToMono(PaymentRequestResponse.class)
                 .timeout(Duration.ofSeconds(6))
                 .block();
+
+        tourpurchaseEntity.setPaymentURL(paymentResponse.getRedirectURL());
+        tourpurchaseEntity = tourTicketsRepository.saveAndFlush(tourpurchaseEntity);
 
         return new TicketPurchaseResponse(paymentResponse.getRedirectURL(), tourpurchaseEntity.getPurchaseId().toString());
     }

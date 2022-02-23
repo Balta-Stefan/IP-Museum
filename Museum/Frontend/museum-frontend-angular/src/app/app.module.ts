@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {HttpClientModule, HttpHeaders, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +16,11 @@ import { SessionCheckComponent } from './components/session-check/session-check.
 import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 import { HttpInterceptor } from './HttpInterceptor';
 import { RssFeedPageComponent } from './components/rss-feed-page/rss-feed-page.component';
+import { TourCardComponent } from './components/tour-card/tour-card.component';
+import { TourPageComponent } from './components/tour-page/tour-page.component';
+import { WeatherCardComponent } from './components/weather-card/weather-card.component';
 
+export const staticContentBaseURL: string = "http://localhost:8000/";
 export const baseURL: string = "http://localhost:8000/api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
   'Accept': 'application/json', 
@@ -44,13 +49,17 @@ export function emptyStringsToNull(form: FormGroup){
     LoginPageComponent,
     SessionCheckComponent,
     RegistrationPageComponent,
-    RssFeedPageComponent
+    RssFeedPageComponent,
+    TourCardComponent,
+    TourPageComponent,
+    WeatherCardComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GoogleMapsModule
   ],
   providers: [
     {

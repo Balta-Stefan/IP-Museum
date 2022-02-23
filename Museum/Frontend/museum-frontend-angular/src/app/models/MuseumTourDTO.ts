@@ -1,4 +1,5 @@
 import { MuseumDTO } from "./MuseumDTO";
+import { TourStaticContentDTO } from "./TourStaticContentDTO";
 
 export interface MuseumTourDTO{
     tourID: number;
@@ -8,5 +9,5 @@ export interface MuseumTourDTO{
     price: number;
     purchased: Date;
     paid: Date;
-    staticContent: string[];
+    staticContent: TourStaticContentDTO[];
 }

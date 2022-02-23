@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `museum`.`TourPurchases` (
   `user` INT NOT NULL,
   `purchased` DATETIME NOT NULL,
   `paid` DATETIME NULL,
+  `paymentURL` VARCHAR(255) NULL,
   PRIMARY KEY (`purchaseID`),
   INDEX `tour_idx` (`tour` ASC) VISIBLE,
   INDEX `user_idx` (`user` ASC) VISIBLE,

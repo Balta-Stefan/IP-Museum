@@ -15,11 +15,14 @@ export class MainPageComponent implements OnInit {
 
   adminMenu: boolean = false;
 
+  adminPanelToken: string = "";
+
   constructor(private sessionService: SessionService, private router: Router) { 
    const userDetails: LoginDetails | null = AuthorizationUtils.getUser();
 
    if(userDetails && userDetails.role == UserRole.ADMIN.toString()){
      this.adminMenu = true;
+     this.adminPanelToken = userDetails.token;
    }
   }
 

@@ -14,8 +14,8 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails
 {
     private final Integer id;
-    private final String username, password;
-    private final Boolean active;
+    //private final String username, password;
+    //private final Boolean active;
     private final Roles role;
     private final List<GrantedAuthority> authorities = new ArrayList<>(1);
     private final UserDTO userDTO;
@@ -24,10 +24,10 @@ public class CustomUserDetails implements UserDetails
     {
         this.userDTO = userDTO;
         this.role = userDTO.getRole();
-        this.username = userDTO.getUsername();
+        //this.username = userDTO.getUsername();
         this.id = userDTO.getUserID();
-        this.password = userDTO.getPassword();
-        this.active = userDTO.getActive();
+        //this.password = userDTO.getPassword();
+        //this.active = userDTO.getActive();
 
 
         authorities.add(new SimpleGrantedAuthority(role.name()));
@@ -43,36 +43,36 @@ public class CustomUserDetails implements UserDetails
     @Override
     public String getPassword()
     {
-        return password;
+        return userDTO.getPassword();
     }
 
     @Override
     public String getUsername()
     {
-        return username;
+        return userDTO.getUsername();
     }
 
     @Override
     public boolean isAccountNonExpired()
     {
-        return active;
+        return userDTO.getActive();
     }
 
     @Override
     public boolean isAccountNonLocked()
     {
-        return active;
+        return userDTO.getActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired()
     {
-        return active;
+        return userDTO.getActive();
     }
 
     @Override
     public boolean isEnabled()
     {
-        return active;
+        return userDTO.getActive();
     }
 }

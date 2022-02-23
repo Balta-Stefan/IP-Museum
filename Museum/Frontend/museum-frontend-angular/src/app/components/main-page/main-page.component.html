@@ -16,7 +16,7 @@
                     <a href="#">Karte</a>
                 </li>
                 <li *ngIf="adminMenu" class="nav-item">
-                    <a href="#">Administratorski panel</a>
+                    <a [href]="'/admin/' + adminPanelToken">Administratorski panel</a>
                 </li>
             </ul>
             <button class="btn btn-danger float-right" (click)="logout()">Odjava</button>
@@ -25,7 +25,7 @@
 </nav>
 
 <div class="container-fluid vh-100">
-    <div class="row" id="main-page-content">
+    <div class="row g-2" id="main-page-content">
         <router-outlet></router-outlet>
     </div>
 </div>

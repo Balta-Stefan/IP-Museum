@@ -1,4 +1,4 @@
-package museum.service.controllers;
+package museum.service.controllers.rest;
 
 import museum.service.models.DTOs.RSSFeedEntry;
 import museum.service.services.RSSReaderService;

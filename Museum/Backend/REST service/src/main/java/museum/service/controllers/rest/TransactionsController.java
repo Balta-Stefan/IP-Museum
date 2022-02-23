@@ -1,4 +1,4 @@
-package museum.service.controllers;
+package museum.service.controllers.rest;
 
 import museum.service.models.DTOs.BankNotificationDTO;
 import museum.service.services.BankNotificationService;

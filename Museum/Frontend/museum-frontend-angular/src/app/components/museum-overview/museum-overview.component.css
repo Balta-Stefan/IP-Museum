@@ -1,3 +1,11 @@
 #museum-name{
     text-align: center;
 }
+
+#museum-thumbnail{
+    max-height: 25rem;
+}
+
+#thumbnail-wrapper{
+    text-align: center;
+}

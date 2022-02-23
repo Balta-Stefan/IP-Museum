@@ -1,0 +1,30 @@
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    margin: 0;
+}
+
+:root{
+    --sidenav-background-color: #333333;
+    --sidenav-link-color: white;
+}
+
+nav a{
+    text-decoration: none;
+    color: var(--sidenav-link-color);
+    text-align: center;
+    font-weight: bold;
+    display: block;
+
+    border-bottom: 2px solid var(--sidenav-link-color);
+
+    padding: 15px;
+}
+
+nav a:hover{
+    color: var(--sidenav-background-color);
+    background-color: var(--sidenav-link-color);
+}

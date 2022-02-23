@@ -1,10 +1,11 @@
-package museum.service.controllers;
+package museum.service.controllers.rest;
 
 import museum.service.exceptions.NotFoundException;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.UserDTO;
 import museum.service.models.entities.AccesstokenEntity;
 import museum.service.models.entities.UserEntity;
+import museum.service.models.enums.Roles;
 import museum.service.repositories.AccessTokensRepository;
 import museum.service.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,15 +42,19 @@ public class SessionController
         // generate a new access token
         LocalDateTime tokenCreationTimestamp = LocalDateTime.now();
         UserEntity userEntity = userRepository.findById(userDetails.getId()).orElseThrow(NotFoundException::new);
-        AccesstokenEntity token = new AccesstokenEntity();
-        token.setUser(userEntity);
-        token.setCreated(tokenCreationTimestamp);
-        token.setValidUntil(tokenCreationTimestamp.plusDays(tokenValidity_days));
-        token.setValid(true);
 
-        token = tokensRepository.saveAndFlush(token);
+        if(userEntity.getRole().equals(Roles.ADMIN))
+        {
+            AccesstokenEntity token = new AccesstokenEntity();
+            token.setUser(userEntity);
+            token.setCreated(tokenCreationTimestamp);
+            token.setValidUntil(tokenCreationTimestamp.plusDays(tokenValidity_days));
+            token.setValid(true);
 
-        userDetails.getUserDTO().setToken(token.getToken().toString());
+            token = tokensRepository.saveAndFlush(token);
+
+            userDetails.getUserDTO().setToken(token.getToken().toString());
+        }
 
         return userDetails.getUserDTO();
     }

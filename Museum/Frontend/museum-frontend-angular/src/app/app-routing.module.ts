@@ -9,6 +9,7 @@ import { RegistrationPageComponent } from './components/registration-page/regist
 import { RssFeedCardComponent } from './components/rss-feed-card/rss-feed-card.component';
 import { RssFeedPageComponent } from './components/rss-feed-page/rss-feed-page.component';
 import { SessionCheckComponent } from './components/session-check/session-check.component';
+import { TourPageComponent } from './components/tour-page/tour-page.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'museums/:id',
         component: MuseumOverviewComponent
+      },
+      {
+        path: 'museums/:museumID/tour/:tourID',
+        component: TourPageComponent
       },
       {
         path: "news",

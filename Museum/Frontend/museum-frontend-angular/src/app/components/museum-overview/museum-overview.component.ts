@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MuseumDTO } from 'src/app/models/MuseumDTO';
+import { MuseumTourDTO } from 'src/app/models/MuseumTourDTO';
 import { WeatherDTO } from 'src/app/models/WeatherDTO';
 import { MuseumService } from 'src/app/services/museum.service';
 
@@ -13,8 +14,11 @@ export class MuseumOverviewComponent implements OnInit {
 
   museum!: MuseumDTO;
   weathers: WeatherDTO[] = [];
+  tours: MuseumTourDTO[] = [];
 
-  constructor(private route: ActivatedRoute, private museumService: MuseumService) { 
+  constructor(private route: ActivatedRoute, 
+    private museumService: MuseumService, 
+    private router: Router) { 
     
   }
 
@@ -23,16 +27,12 @@ export class MuseumOverviewComponent implements OnInit {
       let id = parseInt(params.get('id')!);
 
       this.museumService.getMuseum(id).subscribe(val => this.museum = val);
-      /*this.museumService.getWeathers(id).subscribe(weatherDTOS => {
-
-        weatherDTOS.forEach(cityWeather => {
-          cityWeather.weather.forEach(concreteWeather => {
-            concreteWeather.icon = `http://openweathermap.org/img/wn/${concreteWeather.icon}@4x.png`;
-          })
-        })
-        this.weathers = weatherDTOS
-      });*/
+      this.museumService.getTours(id).subscribe(val => this.tours = val);
+      this.museumService.getWeathers(id).subscribe(weatherDTOS => this.weathers = weatherDTOS);
     });
   }
 
+  tourSelected(tour: MuseumTourDTO): void{
+    this.router.navigate([`tour/${tour.tourID}`], {relativeTo: this.route});
+  }
 }

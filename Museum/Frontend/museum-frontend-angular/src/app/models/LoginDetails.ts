@@ -1,5 +1,3 @@
-import { UserRole } from "./UserRole";
-
 export interface LoginDetails{
     userID: number;
     username: string;
