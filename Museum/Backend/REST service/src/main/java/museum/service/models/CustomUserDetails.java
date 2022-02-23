@@ -20,6 +20,8 @@ public class CustomUserDetails implements UserDetails
     private final List<GrantedAuthority> authorities = new ArrayList<>(1);
     private final UserDTO userDTO;
 
+    private Boolean isLoggedIntoAdminApp = false;
+
     public CustomUserDetails(UserDTO userDTO)
     {
         this.userDTO = userDTO;
