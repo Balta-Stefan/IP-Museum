@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,4 +10,10 @@
 
 <div class="container-fluid vh-100">
     <div class="row g-2">
+        <h1>users panel</h1>
+
+    </div>
+</div>
+</body>
+</html>
 

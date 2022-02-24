@@ -12,16 +12,28 @@ import { SessionService } from './services/session.service';
 export class AppComponent {
   title = 'museum-frontend-angular';
 
+
   constructor(private sessionService: SessionService, private router: Router){
-    this.sessionService.authenticate(null, null).subscribe({
-      error: () => {
-        this.router.navigateByUrl('/login');
-      },
-      next: (receivedValue: LoginDetails) => {
-        AuthorizationUtils.userLogin(receivedValue);
-      }
-    });
 
     this.router.navigateByUrl('/session_check');
+
+    // check whether JWT is in local storage
+    const jwt: string | null = localStorage.getItem('jwt');
+  
+    if(jwt){
+      this.sessionService.checkSessionStatus().subscribe({
+        error: (err: any) => {
+          this.router.navigateByUrl('/login');
+        },
+        next: (receivedValue: LoginDetails) => {
+          AuthorizationUtils.userLogin(receivedValue, false);
+          this.router.navigateByUrl('');
+        }
+      });
+    }
+    else{
+      this.router.navigateByUrl('/login');
+      return;
+    }
   }
 }

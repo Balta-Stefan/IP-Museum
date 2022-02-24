@@ -14,22 +14,22 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails
 {
     private final Integer id;
-    //private final String username, password;
-    //private final Boolean active;
+    private final String username, password;
+    private final Boolean active;
     private final Roles role;
     private final List<GrantedAuthority> authorities = new ArrayList<>(1);
-    private final UserDTO userDTO;
+    //private final UserDTO userDTO;
 
     private Boolean isLoggedIntoAdminApp = false;
 
-    public CustomUserDetails(UserDTO userDTO)
+    public CustomUserDetails(Integer id, String username, String password, Boolean active, Roles role)
     {
-        this.userDTO = userDTO;
-        this.role = userDTO.getRole();
-        //this.username = userDTO.getUsername();
-        this.id = userDTO.getUserID();
-        //this.password = userDTO.getPassword();
-        //this.active = userDTO.getActive();
+        //this.userDTO = userDTO;
+        this.role = role;
+        this.username = username;
+        this.id = id;
+        this.password = password;
+        this.active = active;
 
 
         authorities.add(new SimpleGrantedAuthority(role.name()));
@@ -45,36 +45,36 @@ public class CustomUserDetails implements UserDetails
     @Override
     public String getPassword()
     {
-        return userDTO.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername()
     {
-        return userDTO.getUsername();
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired()
     {
-        return userDTO.getActive();
+        return active;
     }
 
     @Override
     public boolean isAccountNonLocked()
     {
-        return userDTO.getActive();
+        return active;
     }
 
     @Override
     public boolean isCredentialsNonExpired()
     {
-        return userDTO.getActive();
+        return active;
     }
 
     @Override
     public boolean isEnabled()
     {
-        return userDTO.getActive();
+        return active;
     }
 }

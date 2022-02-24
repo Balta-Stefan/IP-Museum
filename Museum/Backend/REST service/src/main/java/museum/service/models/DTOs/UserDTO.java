@@ -31,6 +31,4 @@ public class UserDTO
     private Roles role;
 
     private Boolean active;
-
-    private AccessTokenDTO token;
 }

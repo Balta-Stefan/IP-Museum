@@ -24,5 +24,4 @@ public class UserDTO
 
     private String password;
     private Roles role;
-    private String token;
 }

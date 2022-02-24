@@ -26,15 +26,15 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameAndActiveTrue(username).orElseThrow(() ->
         {
             throw new UsernameNotFoundException("Username not found");
         });
 
    
-		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+		UserDTO u = modelMapper.map(user, UserDTO.class);
 
-		CustomUserDetails userDetails = new CustomUserDetails(userDTO);
+		CustomUserDetails userDetails = new CustomUserDetails(u.getUserID(), u.getUsername(), u.getPassword(), u.getActive(), u.getRole());
 		return userDetails;
        
     }

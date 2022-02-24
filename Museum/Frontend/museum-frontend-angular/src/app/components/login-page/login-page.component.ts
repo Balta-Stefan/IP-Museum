@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginDetails } from 'src/app/models/LoginDetails';
+import { LoginRequest } from 'src/app/models/LoginRequest';
 import { AuthorizationUtils } from 'src/app/services/AuthorizationUtil';
 import { SessionService } from 'src/app/services/session.service';
 
@@ -27,12 +28,15 @@ export class LoginPageComponent implements OnInit {
   }
 
   login(): void{
-    this.sessionService.authenticate(this.formData.value['username'], this.formData.value['password']).subscribe({
-      error: () => {
+    const loginRequest: LoginRequest = {username: this.formData.value['username'], password: this.formData.value['password']};
+
+    this.sessionService.authenticate(loginRequest).subscribe({
+      error: (err: any) => {
+        console.log(err);
         this.loginMessage = "Prijava neuspješna";
       },
       next: (receivedObject: LoginDetails) => {
-        AuthorizationUtils.userLogin(receivedObject);
+        AuthorizationUtils.userLogin(receivedObject, true);
         this.router.navigateByUrl('');
       }
      
