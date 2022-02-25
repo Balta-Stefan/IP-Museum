@@ -1,0 +1,53 @@
+<div class="card text-dark bg-light mb-3">
+    <div class="card-body">
+        <p class="card-text">Početak posjete: {{tour?.startTimestamp | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+        <p class="card-text">Kraj posjete: {{tour?.endTimestamp | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+        <p class="card-text">Cijena: {{tour?.price}} KM</p>
+
+        <div *ngIf="showBuyTicketButton">
+            <button class="btn btn-primary" (click)="changeFormVisibility()">Kupi kartu</button>
+
+            <form *ngIf="showBuyTicketForm" [formGroup]="cardFormData" (ngSubmit)="sendCardData()">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="firstName" placeholder="Unesite ime" formControlName="firstName">
+                    <label for="firstName">Ime</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="lastName" placeholder="Unesite prezime" formControlName="lastName">
+                    <label for="lastName">Prezime</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="card" placeholder="Broj kartice" formControlName="cardNumber">
+                    <label for="card">Broj kartice</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="cardType" formControlName="cardType">
+                      <option disabled selected [value]="null"></option>
+                      <option *ngFor="let type of cardTypes | keyvalue" [value]="type.key">
+                        {{type.value}}
+                      </option>
+                    </select>
+                    <label for="cardType">Tip kartice</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="date" class="form-control" id="cardExpiration" placeholder="Datum isteka" formControlName="cardExpirationDate">
+                    <label for="cardExpiration">Datum isteka kartice</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="pin" placeholder="Pin" formControlName="pin">
+                    <label for="pin">Pin</label>
+                </div>
+                <button [disabled]="cardFormData.invalid || disableSendCardDataButton" type="submit" class="btn btn-primary">Pošalji podatke</button>
+            </form>
+            <h1 [ngStyle]="{'color': cardFormSuccess ? 'green' : 'red'}">{{cardFormMessage}}</h1>
+        </div>
+    </div>
+  </div>
+
+  <div *ngIf="showTimer">
+    <h1>Obilazak počinje za: {{remainingDays + ' dana, ' + remainingHours + ' sati, ' + remainingMinutes + ' minuta, ' + remainingSeconds + ' sekundi'}}</h1>
+  </div>
+
+  <div *ngIf="showTour">
+
+  </div>

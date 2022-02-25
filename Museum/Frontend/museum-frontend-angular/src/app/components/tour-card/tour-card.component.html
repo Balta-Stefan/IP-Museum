@@ -1,0 +1,7 @@
+<div class="card text-white bg-primary mb-3" (click)="onTourSelect()">
+    <div class="card-body">
+        <p class="card-text">Početak: {{tour.startTimestamp | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+        <p class="card-text">Kraj: {{tour.endTimestamp | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+        <p class="card-text">Cijena: {{tour.price}}</p>
+    </div>
+</div>
