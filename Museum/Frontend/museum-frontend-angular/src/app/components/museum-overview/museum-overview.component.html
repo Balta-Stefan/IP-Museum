@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-9">
+    <div class="offset-md-3 col-md-5">
         <div class="row g-2">
             <h1 id="museum-name">{{museum?.name}}</h1>
             <div id="thumbnail-wrapper">
@@ -13,7 +13,20 @@
                 <li class="list-group-item list-group-item-info">Broj telefona: {{museum?.phone}}</li>
                 <li class="list-group-item list-group-item-info">Tip muzeja: {{museum?.type?.type}}</li>
             </ul>
-        
+            
+            <div *ngIf="displayGoogleMap">
+                <google-map 
+                [options]="mapOptions"
+                width="100%"
+                height="20rem">
+                    <map-marker
+                    [position]="marker.position">
+    
+                    </map-marker>
+                </google-map>
+            </div>
+           
+
             <h2>Obilasci</h2>
         
             <app-tour-card *ngFor="let tour of tours"
@@ -24,7 +37,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="offset-md-1 col-md-3">
         <div class="row">
             <app-weather-card *ngFor="let weather of weathers"
             [weather]="weather">

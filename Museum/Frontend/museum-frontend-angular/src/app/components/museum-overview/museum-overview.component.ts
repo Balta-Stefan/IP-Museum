@@ -16,6 +16,15 @@ export class MuseumOverviewComponent implements OnInit {
   weathers: WeatherDTO[] = [];
   tours: MuseumTourDTO[] = [];
 
+
+  mapOptions!: google.maps.MapOptions;
+
+  marker:any = null;/*{
+    position: {lat: this.latitude, lng: this.longitude}
+  }*/
+
+  displayGoogleMap: boolean = false; // needed to avoid refreshing
+
   constructor(private route: ActivatedRoute, 
     private museumService: MuseumService, 
     private router: Router) { 
@@ -26,7 +35,20 @@ export class MuseumOverviewComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       let id = parseInt(params.get('id')!);
 
-      this.museumService.getMuseum(id).subscribe(val => this.museum = val);
+      this.museumService.getMuseum(id).subscribe(val => {
+        this.museum = val;
+
+        this.mapOptions = {
+          center: {lat: this.museum.latitude, lng: this.museum.longitude},
+          zoom: 15.92
+        };        
+        this.marker = {
+          position: {lat: this.museum.latitude, lng: this.museum.longitude}
+        };
+
+        this.displayGoogleMap = true;
+      });
+
       this.museumService.getTours(id).subscribe(val => this.tours = val);
       this.museumService.getWeathers(id).subscribe(weatherDTOS => this.weathers = weatherDTOS);
     });
