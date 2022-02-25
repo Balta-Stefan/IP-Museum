@@ -26,8 +26,8 @@ public class SessionController
     private final ModelMapper modelMapper;
 
 
-    @Value("${token.validity_days}")
-    private Integer tokenValidity_days;
+    /*@Value("${token.validity_days}")
+    private Integer tokenValidity_days;*/
 
     public SessionController(UserRepository userRepository, AccessTokensRepository tokensRepository, LoginService loginService, ModelMapper modelMapper)
     {
@@ -43,7 +43,8 @@ public class SessionController
         if(authentication != null)
         {
             CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-            return modelMapper.map(userDetails, LoginResponse.class);
+            return loginService.refreshLogin(userDetails);
+            //return modelMapper.map(userDetails, LoginResponse.class);
         }
         else
         {

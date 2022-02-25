@@ -9,4 +9,5 @@ import museum.service.models.DTOs.UserDTO;
 public class LoginResponse extends UserDTO
 {
     private String jwt;
+    private String adminToken;
 }

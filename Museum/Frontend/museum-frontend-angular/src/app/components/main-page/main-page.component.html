@@ -16,8 +16,14 @@
                     <a href="#">Karte</a>
                 </li>
                 <li *ngIf="adminMenu" class="nav-item">
-                    <a [href]="'/admin/?token=' + adminPanelToken">Administratorski panel</a>
+                    <a [href]="'/admin/login?token=' + adminPanelToken">Administratorski panel</a>
                 </li>
+                <!--<li *ngIf="adminMenu" class="nav-item">
+                    <form method="post" action="/admin/login">
+                        <input type="hidden" [value]="adminPanelToken" name="token"/>
+                        <button type="submit" id="admin-panel-button">Admin panel</button>
+                    </form>
+                </li>-->
             </ul>
             <button class="btn btn-danger float-right" (click)="logout()">Odjava</button>
         </div>

@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface UserService
 {
     UserDTO createUser(UserDTO userToCreate, Optional<CustomUserDetails> requester);
-    AccessTokenDTO generateAccessToken(Integer userID);
+    //AccessTokenDTO generateAccessToken(Integer userID);
 }

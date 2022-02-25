@@ -25,7 +25,7 @@ export class SessionService {
   }
 
   logout(): void{
-    this.http.post<any>(`${baseURL}/logout`, {}).subscribe(response => {
+    this.http.post<any>(`${baseURL}/logout`, null).subscribe(response => {
       complete: () => {
         localStorage.removeItem('jwt');
         this.router.navigateByUrl('/login');

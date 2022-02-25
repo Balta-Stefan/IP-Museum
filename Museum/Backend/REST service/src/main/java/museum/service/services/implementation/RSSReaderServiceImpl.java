@@ -28,7 +28,6 @@ public class RSSReaderServiceImpl implements RSSReaderService
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedURL));
 
-            //System.out.println("Title: " + feed.getTitle());
 
             List<RSSFeedEntry> entries = new ArrayList<>();
 

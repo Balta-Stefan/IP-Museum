@@ -8,4 +8,5 @@ export interface LoginDetails{
     role: string;
     active: boolean;
     jwt: string;
+	adminToken: string;
 }

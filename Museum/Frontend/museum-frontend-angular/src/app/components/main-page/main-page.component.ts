@@ -22,7 +22,7 @@ export class MainPageComponent implements OnInit {
 
    if(userDetails && userDetails.role == UserRole.ADMIN.toString()){
      this.adminMenu = true;
-     this.adminPanelToken = userDetails.jwt;
+     this.adminPanelToken = userDetails.adminToken;
    }
   }
 

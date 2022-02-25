@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${token.validity_days}")
-    private Integer token_validity_days;
+    /*@Value("${token.validity_days}")
+    private Integer token_validity_days;*/
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService
         return modelMapper.map(user, UserDTO.class);
     }
 
-    @Override
+    /*@Override
     public AccessTokenDTO generateAccessToken(Integer userID)
     {
         UserEntity userEntity = userRepository.findById(userID).orElseThrow(NotFoundException::new);
@@ -125,5 +125,5 @@ public class UserServiceImpl implements UserService
         entityManager.refresh(newToken);
 
         return modelMapper.map(newToken, AccessTokenDTO.class);
-    }
+    }*/
 }

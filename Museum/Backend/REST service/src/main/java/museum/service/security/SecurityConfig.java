@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -19,9 +20,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 
@@ -44,10 +43,12 @@ public class SecurityConfig
     public static class MvcSecurityConfig extends WebSecurityConfigurerAdapter
     {
         private final LogoutHandler customLogoutHandler;
+        private final AdminTokenAuthenticationProvider adminTokenAuthenticationProvider;
 
-        public MvcSecurityConfig(LogoutHandler customLogoutHandler)
+        public MvcSecurityConfig(LogoutHandler customLogoutHandler, AdminTokenAuthenticationProvider adminTokenAuthenticationProvider)
         {
             this.customLogoutHandler = customLogoutHandler;
+            this.adminTokenAuthenticationProvider = adminTokenAuthenticationProvider;
         }
 
         @Override
@@ -57,26 +58,25 @@ public class SecurityConfig
                     .antMatcher("/admin/**")
                     .authorizeRequests()
                     .antMatchers("/index.html", "/", "/css/*", "/js/*").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
+                    //.antMatchers("/admin/**").hasAuthority("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/admin/login").permitAll()
+                    .anyRequest().authenticated();
+                    /*.and()
+                    .authenticationProvider(adminTokenAuthenticationProvider);*/
+                    /*.and()
                     .logout()
                         .logoutUrl("/logout")
                         .addLogoutHandler(customLogoutHandler)
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID");
+                        .deleteCookies("JSESSIONID");*/
         }
 
-        @Bean
-        public FilterRegistrationBean<MvcTokenAuthFilter> adminDashboardFilter()
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception
         {
-            FilterRegistrationBean<MvcTokenAuthFilter> registrationBean = new FilterRegistrationBean<>();
-
-            registrationBean.setFilter(new MvcTokenAuthFilter());
-            registrationBean.addUrlPatterns("/admin/*");
-
-            return registrationBean;
+            auth.authenticationProvider(adminTokenAuthenticationProvider);
         }
     }
 
@@ -118,7 +118,9 @@ public class SecurityConfig
                     .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .logout()
+                    .logoutUrl("/api/v1/logout");
 
             /*http
                     .antMatcher("/api/v1/**")
@@ -139,6 +141,17 @@ public class SecurityConfig
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID");*/
+        }
+
+        @Bean
+        public FilterRegistrationBean<JwtAuthorizationFilter> apiJwtFilter()
+        {
+            FilterRegistrationBean<JwtAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
+
+            registrationBean.setFilter(authorizationFilter);
+            registrationBean.addUrlPatterns("/api/v1/*");
+
+            return registrationBean;
         }
 
         @Bean

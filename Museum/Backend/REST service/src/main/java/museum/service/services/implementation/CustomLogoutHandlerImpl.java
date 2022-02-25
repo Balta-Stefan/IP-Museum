@@ -22,7 +22,5 @@ public class CustomLogoutHandlerImpl implements LogoutHandler
         int x = userWatcherService.logout();
         //authentication.setAuthenticated(false);
         //request.getSession().invalidate();
-
-        System.out.println("Logout: num of currently logged in users: " + x);
     }
 }

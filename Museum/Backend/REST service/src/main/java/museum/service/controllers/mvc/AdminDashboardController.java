@@ -1,60 +1,40 @@
 package museum.service.controllers.mvc;
 
-import museum.service.models.CustomUserDetails;
-import museum.service.models.entities.AccesstokenEntity;
-import museum.service.repositories.AccessTokensRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import museum.service.services.AdminLoginService;
+import museum.service.services.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
+//@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminDashboardController
 {
-    private final AccessTokensRepository tokensRepository;
+    private final AdminLoginService adminLoginService;
 
-    public AdminDashboardController(AccessTokensRepository tokensRepository)
+    public AdminDashboardController(AdminLoginService adminLoginService)
     {
-        this.tokensRepository = tokensRepository;
+        this.adminLoginService = adminLoginService;
     }
 
-
     @GetMapping
-    public String login(@RequestParam(required = false) String token, HttpSession session, Authentication authentication)
+    public String getAdminPanel()
     {
-        // check if the user is already logged in
-        CustomUserDetails user = (CustomUserDetails)authentication.getPrincipal();
+        return "admin-dashboard";
+    }
 
-
-        if(user.getIsLoggedIntoAdminApp())
+    @GetMapping("/login")
+    public String login(@RequestParam("token") String token)
+    {
+        if(adminLoginService.loginAdmin(token) == true)
         {
-            return "admin-dashboard";
-        }
-        else if(token == null)
-        {
-            return "Forbidden";
+            return "redirect:/admin";
         }
 
-        // token is supplied, determine whether it is valid
-        Optional<AccesstokenEntity> tokenEntity = tokensRepository.findById(UUID.fromString(token));
-        if(tokenEntity.isEmpty())
-        {
-            return "Forbidden";
-        }
-
-        user.setIsLoggedIntoAdminApp(true);
-
-        return "redirect:/admin";
+        return "unauthorized";
     }
 
 
