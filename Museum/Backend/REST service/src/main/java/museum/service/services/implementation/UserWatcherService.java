@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+@Service
 public class UserWatcherService
 {
     private final AtomicInteger numOfLoggedInUsers = new AtomicInteger(0);

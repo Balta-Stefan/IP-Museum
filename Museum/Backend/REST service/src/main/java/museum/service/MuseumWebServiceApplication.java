@@ -29,9 +29,4 @@ public class MuseumWebServiceApplication extends SpringBootServletInitializer
         return new ModelMapper();
     }
 
-    @Bean
-    public UserWatcherService userWatcherService()
-    {
-        return new UserWatcherService();
-    }
 }
