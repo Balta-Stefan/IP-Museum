@@ -1,7 +1,6 @@
 package museum.service.security;
 
 import museum.service.filters.JwtAuthorizationFilter;
-import museum.service.security.handlers.CustomAdminLogoutSuccessHandler;
 import museum.service.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -42,12 +41,10 @@ public class SecurityConfig
     @Order(2)
     public static class MvcSecurityConfig extends WebSecurityConfigurerAdapter
     {
-        private final CustomAdminLogoutSuccessHandler customLogoutSuccessHandler;
         private final AdminTokenAuthenticationProvider adminTokenAuthenticationProvider;
 
-        public MvcSecurityConfig(CustomAdminLogoutSuccessHandler customLogoutSuccessHandler, AdminTokenAuthenticationProvider adminTokenAuthenticationProvider)
+        public MvcSecurityConfig(AdminTokenAuthenticationProvider adminTokenAuthenticationProvider)
         {
-            this.customLogoutSuccessHandler = customLogoutSuccessHandler;
             this.adminTokenAuthenticationProvider = adminTokenAuthenticationProvider;
         }
 
@@ -63,11 +60,12 @@ public class SecurityConfig
                     .antMatchers("/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
                     .and()
-                    .logout()
-                        .logoutUrl("/admin/logout")
-                        .clearAuthentication(true)
-                        .logoutSuccessHandler(customLogoutSuccessHandler)
-                        .deleteCookies("JSESSIONID");
+                    .logout(logout -> logout
+                                    .logoutUrl("/admin/logout")
+                                    .clearAuthentication(true)
+                                    .invalidateHttpSession(true)
+                                    .deleteCookies("JSESSIONID")
+                                    .logoutSuccessUrl("/"));
         }
 
         @Override

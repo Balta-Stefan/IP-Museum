@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a href="#">Korisnici</a>
+                    <a href="./users">Korisnici</a>
                 </li>
                 <li class="nav-item">
                     <a href="#">Muzeji</a>

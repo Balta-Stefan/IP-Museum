@@ -6,20 +6,17 @@ import museum.service.models.enums.Roles;
 import museum.service.repositories.AccessTokensRepository;
 import museum.service.security.AdminTokenAuthenticationProvider;
 import museum.service.services.AdminLoginService;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class AdminLoginServiceImpl implements AdminLoginService
 {
     private final AccessTokensRepository tokensRepository;
