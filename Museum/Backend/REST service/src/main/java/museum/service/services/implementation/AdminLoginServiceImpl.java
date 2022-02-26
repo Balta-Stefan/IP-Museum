@@ -34,21 +34,24 @@ public class AdminLoginServiceImpl implements AdminLoginService
     @Override
     public Boolean loginAdmin(String token)
     {
-        AccesstokenEntity accesstoken = tokensRepository.findById(UUID.fromString(token)).orElseThrow(UnauthorizedException::new);
+        AccesstokenEntity accessToken = tokensRepository.findById(UUID.fromString(token)).orElseThrow(UnauthorizedException::new);
 
-        if(LocalDateTime.now().isAfter(accesstoken.getValidUntil()) || accesstoken.getValid() == false)
+        if(LocalDateTime.now().isAfter(accessToken.getValidUntil()) || accessToken.getValid() == false)
         {
             throw new UnauthorizedException();
         }
 
         try
         {
-            Roles userRole = accesstoken.getUser().getRole();
+            Roles userRole = accessToken.getUser().getRole();
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(token, null);
 
             Authentication authentication = authenticationManager.authenticate(authToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            accessToken.setValid(false);
+            accessToken = tokensRepository.saveAndFlush(accessToken);
         }
         catch(Exception e)
         {
