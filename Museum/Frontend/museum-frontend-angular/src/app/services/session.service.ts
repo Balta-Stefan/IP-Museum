@@ -21,16 +21,13 @@ export class SessionService {
   }
 
   authenticate(credentials: LoginRequest): Observable<LoginDetails>{
-    return this.http.post<any>(`${baseURL}/login`, credentials);
+    console.log('I am posting auth to URL: ');
+    console.log(`${baseURL}/session/login`);
+    return this.http.post<any>(`${baseURL}/session/login`, credentials);
   }
 
   logout(): void{
-    this.http.post<any>(`${baseURL}/logout`, null).subscribe(response => {
-      complete: () => {
-        localStorage.removeItem('jwt');
-        this.router.navigateByUrl('/login');
-      }
-    });
+    this.http.post<any>(`${baseURL}/session/logout`, null).subscribe();
   }
 
 }

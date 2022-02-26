@@ -3,11 +3,8 @@ package museum.service.controllers.rest;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.requests.LoginDetails;
 import museum.service.models.responses.LoginResponse;
-import museum.service.repositories.AccessTokensRepository;
-import museum.service.repositories.UserRepository;
 import museum.service.services.LoginService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
+import museum.service.services.implementation.UserWatcherService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,24 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/session")
 public class SessionController
 {
-    private final UserRepository userRepository;
-    private final AccessTokensRepository tokensRepository;
     private final LoginService loginService;
-    private final ModelMapper modelMapper;
+    private final UserWatcherService userWatcherService;
 
 
     /*@Value("${token.validity_days}")
     private Integer tokenValidity_days;*/
 
-    public SessionController(UserRepository userRepository, AccessTokensRepository tokensRepository, LoginService loginService, ModelMapper modelMapper)
+    public SessionController(LoginService loginService, UserWatcherService userWatcherService)
     {
-        this.userRepository = userRepository;
-        this.tokensRepository = tokensRepository;
         this.loginService = loginService;
-        this.modelMapper = modelMapper;
+        this.userWatcherService = userWatcherService;
     }
 
     @PostMapping("/login")
@@ -75,11 +68,15 @@ public class SessionController
         return userDetails.getUserDTO();*/
     }
 
-    /*@PostMapping("/logout")
-    public void logout(HttpSession session)
+    @PostMapping("/logout")
+    public void logout(Authentication authentication)
     {
-        session.invalidate();
+        CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
+        String jwt = (String)authentication.getCredentials();
+
+        System.out.println("user logging out: " + userDetails.getId());
+        System.out.println("With jwt: " + jwt);
 
         userWatcherService.logout();
-    }*/
+    }
 }

@@ -21,7 +21,7 @@ import { TourPageComponent } from './components/tour-page/tour-page.component';
 import { WeatherCardComponent } from './components/weather-card/weather-card.component';
 
 export const staticContentBaseURL: string = "http://localhost:8000/";
-export const baseURL: string = "http://localhost:8000/api/v1";
+export const baseURL: string = "api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
   'Accept': 'application/json', 
   'Content-Type': 'application/json'

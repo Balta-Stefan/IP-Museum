@@ -32,6 +32,7 @@ export class MainPageComponent implements OnInit {
   logout(): void{
     this.sessionService.logout();
 
+    localStorage.removeItem('jwt');
     this.router.navigateByUrl('/login');
   }
 }

@@ -115,12 +115,10 @@ public class SecurityConfig
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST,"/api/v1/user").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/transactions").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/v1/session/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                    .logout()
-                    .logoutUrl("/api/v1/logout");
+                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
             /*http
                     .antMatcher("/api/v1/**")
