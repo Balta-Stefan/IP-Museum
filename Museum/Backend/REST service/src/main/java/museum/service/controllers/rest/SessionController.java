@@ -3,7 +3,7 @@ package museum.service.controllers.rest;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.requests.LoginDetails;
 import museum.service.models.responses.LoginResponse;
-import museum.service.services.LoginService;
+import museum.service.services.UserSessionService;
 import museum.service.services.implementation.UserWatcherService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,17 +17,15 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/session")
 public class SessionController
 {
-    private final LoginService loginService;
-    private final UserWatcherService userWatcherService;
+    private final UserSessionService userSessionService;
 
 
     /*@Value("${token.validity_days}")
     private Integer tokenValidity_days;*/
 
-    public SessionController(LoginService loginService, UserWatcherService userWatcherService)
+    public SessionController(UserSessionService userSessionService)
     {
-        this.loginService = loginService;
-        this.userWatcherService = userWatcherService;
+        this.userSessionService = userSessionService;
     }
 
     @PostMapping("/login")
@@ -36,36 +34,12 @@ public class SessionController
         if(authentication != null)
         {
             CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-            return loginService.refreshLogin(userDetails);
-            //return modelMapper.map(userDetails, LoginResponse.class);
+            return userSessionService.refreshLogin(userDetails);
         }
         else
         {
-            return loginService.login(loginDetails);
+            return userSessionService.login(loginDetails);
         }
-
-        /*CustomUserDetails userDetails = (CustomUserDetails)(authentication.getPrincipal());
-
-
-        UserEntity userEntity = userRepository.findById(userDetails.getId()).orElseThrow(NotFoundException::new);
-
-        // generate a new access token if this user is admin
-        if(userEntity.getRole().equals(Roles.ADMIN))
-        {
-            LocalDateTime tokenCreationTimestamp = LocalDateTime.now();
-
-            AccesstokenEntity token = new AccesstokenEntity();
-            token.setUser(userEntity);
-            token.setCreated(tokenCreationTimestamp);
-            token.setValidUntil(tokenCreationTimestamp.plusDays(tokenValidity_days));
-            token.setValid(true);
-
-            token = tokensRepository.saveAndFlush(token);
-
-            userDetails.getUserDTO().setToken(token.getToken().toString());
-        }
-
-        return userDetails.getUserDTO();*/
     }
 
     @PostMapping("/logout")
@@ -74,9 +48,6 @@ public class SessionController
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         String jwt = (String)authentication.getCredentials();
 
-        System.out.println("user logging out: " + userDetails.getId());
-        System.out.println("With jwt: " + jwt);
-
-        userWatcherService.logout();
+        this.userSessionService.logout(userDetails);
     }
 }

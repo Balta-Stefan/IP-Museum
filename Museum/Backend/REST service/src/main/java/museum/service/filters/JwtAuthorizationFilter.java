@@ -49,7 +49,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter
                     .getBody();
 
             Roles userRole = Roles.valueOf(claims.get("role", String.class));
-            CustomUserDetails customUserDetails = new CustomUserDetails(Integer.valueOf(claims.getId()), claims.getSubject(), null, true, userRole);
+            CustomUserDetails customUserDetails = new CustomUserDetails(Integer.valueOf(claims.getId()), claims.getSubject(), null, true, userRole, token);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, token, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

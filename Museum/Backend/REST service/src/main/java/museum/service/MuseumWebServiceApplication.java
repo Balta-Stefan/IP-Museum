@@ -1,5 +1,6 @@
 package museum.service;
 
+import museum.service.services.implementation.UserWatcherService;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,5 +27,11 @@ public class MuseumWebServiceApplication extends SpringBootServletInitializer
     public ModelMapper modelMapper()
     {
         return new ModelMapper();
+    }
+
+    @Bean
+    public UserWatcherService userWatcherService()
+    {
+        return new UserWatcherService();
     }
 }

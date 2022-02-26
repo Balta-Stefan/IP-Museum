@@ -11,7 +11,7 @@ import museum.service.models.requests.LoginDetails;
 import museum.service.models.responses.LoginResponse;
 import museum.service.repositories.AccessTokensRepository;
 import museum.service.repositories.UserRepository;
-import museum.service.services.LoginService;
+import museum.service.services.UserSessionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,16 +22,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
-public class LoginServiceImpl implements LoginService
+public class UserSessionServiceImpl implements UserSessionService
 {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final AccessTokensRepository tokensRepository;
     private final ModelMapper modelMapper;
+    private final UserWatcherService userWatcherService;
 
     @Value("${jwt.duration_miliseconds}")
     private long jwt_duration_miliseconds;
@@ -42,13 +42,14 @@ public class LoginServiceImpl implements LoginService
     @Value("${admin_token.validity_hours}")
     private Integer adminTokenValidityHours;
 
-    public LoginServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserRepository userRepository, AccessTokensRepository tokensRepository, ModelMapper modelMapper)
+    public UserSessionServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserRepository userRepository, AccessTokensRepository tokensRepository, ModelMapper modelMapper, UserWatcherService userWatcherService)
     {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
         this.tokensRepository = tokensRepository;
         this.modelMapper = modelMapper;
+        this.userWatcherService = userWatcherService;
     }
 
     private String generateAdminToken(Integer userID)
@@ -100,12 +101,21 @@ public class LoginServiceImpl implements LoginService
                 response.setAdminToken(this.generateAdminToken(userDetails.getId()));
             }
 
+            this.userWatcherService.login();
+
             return response;
         }
         catch(Exception e)
         {
             throw new UnauthorizedException();
         }
+   }
+
+   @Override
+   public void logout(CustomUserDetails userDetails)
+   {
+       String jwtToken = userDetails.getJwt();
+       this.userWatcherService.logout();
    }
 
    private String generateJwt(CustomUserDetails userDetails)
