@@ -21,8 +21,6 @@ export class SessionService {
   }
 
   authenticate(credentials: LoginRequest): Observable<LoginDetails>{
-    console.log('I am posting auth to URL: ');
-    console.log(`${baseURL}/session/login`);
     return this.http.post<any>(`${baseURL}/session/login`, credentials);
   }
 

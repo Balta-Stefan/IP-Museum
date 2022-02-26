@@ -242,6 +242,10 @@ public class MuseumServiceImpl implements MuseumService
     {
         MuseumEntity museum = museumsRepository.findById(museumID).orElseThrow(NotFoundException::new);
         List<RegionDTO> regions = countriesService.getRegions(museum.getCountryAlpha2Code());
+        if(regions.size() == 0)
+        {
+            return Collections.emptyList();
+        }
 
         Random rnd = new Random();
         RegionDTO randomRegion = regions.get(rnd.nextInt(regions.size()));

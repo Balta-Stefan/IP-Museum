@@ -34,8 +34,6 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService
    
 		UserDTO u = modelMapper.map(user, UserDTO.class);
 
-		CustomUserDetails userDetails = new CustomUserDetails(u.getUserID(), u.getUsername(), u.getPassword(), u.getActive(), u.getRole());
-		return userDetails;
-       
+        return new CustomUserDetails(u.getUserID(), u.getUsername(), u.getPassword(), u.getActive(), u.getRole());
     }
 }

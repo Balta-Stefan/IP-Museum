@@ -23,22 +23,29 @@ public class WeatherServiceImpl implements WeatherService
     @Override
     public WeatherDTO getWeather(BigDecimal latitude, BigDecimal longitude)
     {
-        // api.openweathermap.org/data/2.5/weather?lat={LATITUDE}&lon={LONGITUDE}&units=metric&lang=hr&appid={MY_KEY}
-        WebClient client = WebClient.builder()
-                .baseUrl(url)
-                .build();
+        try
+        {
+            // api.openweathermap.org/data/2.5/weather?lat={LATITUDE}&lon={LONGITUDE}&units=metric&lang=hr&appid={MY_KEY}
+            WebClient client = WebClient.builder()
+                    .baseUrl(url)
+                    .build();
 
-        WeatherDTO weather = client.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("lat", "{LATITUDE}")
-                        .queryParam("lon", "{LONGITUDE}")
-                        .queryParam("units", "{UNITS}")
-                        .queryParam("lang", "{LANGUAGE}")
-                        .queryParam("appid", "{API_KEY}")
-                        .build(latitude.toString(), longitude.toString(), "metric", "hr", apiKey))
-                .retrieve()
-                .bodyToMono(WeatherDTO.class).block(Duration.ofSeconds(requestTimeoutSeconds));
+            return client.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .queryParam("lat", "{LATITUDE}")
+                            .queryParam("lon", "{LONGITUDE}")
+                            .queryParam("units", "{UNITS}")
+                            .queryParam("lang", "{LANGUAGE}")
+                            .queryParam("appid", "{API_KEY}")
+                            .build(latitude.toString(), longitude.toString(), "metric", "hr", apiKey))
+                    .retrieve()
+                    .bodyToMono(WeatherDTO.class).block(Duration.ofSeconds(requestTimeoutSeconds));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
-        return weather;
+        return null;
     }
 }

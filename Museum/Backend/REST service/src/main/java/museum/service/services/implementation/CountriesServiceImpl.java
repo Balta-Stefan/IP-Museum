@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,53 +28,80 @@ public class CountriesServiceImpl implements CountriesService
     @Override
     public List<CountryDTO> getCountries()
     {
-        WebClient client = WebClient.builder()
-                .baseUrl(countriesApiURL)
-                .build();
+        try
+        {
+            WebClient client = WebClient.builder()
+                    .baseUrl(countriesApiURL)
+                    .build();
 
-        CountryDTO[] countries = client.get()
-                .retrieve()
-                .bodyToMono(CountryDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
+            CountryDTO[] countries = client.get()
+                    .retrieve()
+                    .bodyToMono(CountryDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
 
-        return Arrays.asList(countries);
+            return Arrays.asList(countries);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
     public List<RegionDTO> getRegions(String alpha2)
     {
-        WebClient client = WebClient.builder()
-                .baseUrl(alpha2RegionURL)
-                .build();
+        try
+        {
+            WebClient client = WebClient.builder()
+                    .baseUrl(alpha2RegionURL)
+                    .build();
 
-        RegionDTO[] regions = client
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/{COUNTRY_CODE}/all/")
-                        .queryParam("key", "{API_KEY}")
-                        .build(alpha2, alpha2ConverterApiKey))
-                .retrieve()
-                .bodyToMono(RegionDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
+            RegionDTO[] regions = client
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/{COUNTRY_CODE}/all/")
+                            .queryParam("key", "{API_KEY}")
+                            .build(alpha2, alpha2ConverterApiKey))
+                    .retrieve()
+                    .bodyToMono(RegionDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
 
-        return Arrays.asList(regions);
+            return Arrays.asList(regions);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
     public List<CityDTO> getCities(String alpha2Code, String region)
     {
-        WebClient client = WebClient.builder()
-                .baseUrl(alpha2AndRegion2CitiesURL)
-                .build();
+        try
+        {
+            WebClient client = WebClient.builder()
+                    .baseUrl(alpha2AndRegion2CitiesURL)
+                    .build();
 
-        CityDTO[] cities = client
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(alpha2Code + "/search/")
-                        .queryParam("region", "{region}")
-                        .queryParam("key", "{API_KEY}")
-                        .build(region, alpha2ConverterApiKey))
-                .retrieve()
-                .bodyToMono(CityDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
+            CityDTO[] cities = client
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(alpha2Code + "/search/")
+                            .queryParam("region", "{region}")
+                            .queryParam("key", "{API_KEY}")
+                            .build(region, alpha2ConverterApiKey))
+                    .retrieve()
+                    .bodyToMono(CityDTO[].class).block(Duration.ofSeconds(requestTimeoutSeconds));
 
-        return Arrays.asList(cities);
+            return Arrays.asList(cities);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
     }
 }

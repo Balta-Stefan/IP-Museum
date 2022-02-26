@@ -18,7 +18,10 @@
                     <a href="#">Obilasci</a>
                 </li>
             </ul>
-            <a class="btn btn-danger" href="/admin/invalidate_session" role="button">Odjava</a>
+            <form method="post" action="/admin/logout">
+                <button type="submit">Odjava</button>
+            </form>
+            <!--<a class="btn btn-danger" href="/logout" role="button">Odjava</a>-->
         </div>
     </div>
 </nav>
