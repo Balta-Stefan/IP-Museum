@@ -11,7 +11,6 @@
 
 <div class="container-fluid vh-100">
     <div class="row g-2">
-        <h1 id="neki_region">Ovdje je neki region: </h1>
         <div class="row">
             <table class="table table-striped">
                 <thead>
