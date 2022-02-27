@@ -5,8 +5,11 @@ import { BankTransactionDTO } from 'src/app/models/BankTransactionDTO';
 import { CardTypes } from 'src/app/models/CardTypes';
 import { MuseumTourDTO } from 'src/app/models/MuseumTourDTO';
 import { TicketPurchaseResponse } from 'src/app/models/TicketPurchaseResponse';
+import { StaticResourceType, TourStaticContentDTO } from 'src/app/models/TourStaticContentDTO';
 import { BankService } from 'src/app/services/bank.service';
 import { MuseumService } from 'src/app/services/museum.service';
+
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tour-page',
@@ -40,10 +43,16 @@ export class TourPageComponent implements OnInit, OnDestroy {
 
   timer!: any;
 
+  youtubeVideoURL!: SafeResourceUrl;
+
+  pictures: string[] = [];
+  video!: TourStaticContentDTO;
+
   constructor(private museumService: MuseumService,
     private bankService: BankService,
     private activeRoute: ActivatedRoute,
-    private fb: FormBuilder) { 
+    private fb: FormBuilder,
+    private sanitizer: DomSanitizer) { 
 
       this.cardFormData = fb.group({
         firstName: [null, Validators.required],
@@ -73,7 +82,7 @@ export class TourPageComponent implements OnInit, OnDestroy {
               this.startTimer();
             }
             else{
-              this.refreshTour();
+              this.prepareStaticContent();
             }
           }
           else{
@@ -92,10 +101,29 @@ export class TourPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
+  private prepareStaticContent(): void{
+    this.showTour = true;
+
+    this.tour.staticContent.forEach(c => {
+      if(c.isYouTubeVideo == true){
+        this.youtubeVideoURL = this.sanitizer.bypassSecurityTrustResourceUrl(c.uri);
+
+      } 
+      else if(c.resourceType == StaticResourceType.PICTURE.toString()){
+        this.pictures.push(c.uri);
+      }
+      else{
+        this.video = c;
+      }
+    });
+  }
+
   private refreshTour(): void{
     this.museumService.getTour(this.museumID, this.tourID).subscribe(val => {
       this.tour = val;
       this.showTour = true;
+
+      this.prepareStaticContent();
     });
   }
   

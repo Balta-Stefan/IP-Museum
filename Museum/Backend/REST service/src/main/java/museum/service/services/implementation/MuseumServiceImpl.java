@@ -385,7 +385,12 @@ public class MuseumServiceImpl implements MuseumService
             tmp.setResourceType(StaticResourceType.VIDEO);
 
             // set URI
-            String fileName = tourEntity.getTourId() + UUID.randomUUID().toString() + "." + video.getContentType().split("/")[1];
+            String videoExtension = video.getContentType().split("/")[1];
+            if(videoExtension.equals("x-matroska"))
+            {
+                videoExtension = "mkv";
+            }
+            String fileName = tourEntity.getTourId() + UUID.randomUUID().toString() + "." + videoExtension;
             tmp.setURI(fileName);
 
             this.fileService.save(video, fileName);

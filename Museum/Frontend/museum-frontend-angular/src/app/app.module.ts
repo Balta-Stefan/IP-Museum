@@ -19,8 +19,8 @@ import { RssFeedPageComponent } from './components/rss-feed-page/rss-feed-page.c
 import { TourCardComponent } from './components/tour-card/tour-card.component';
 import { TourPageComponent } from './components/tour-page/tour-page.component';
 import { WeatherCardComponent } from './components/weather-card/weather-card.component';
+import { PictureCarouselComponent } from './components/picture-carousel/picture-carousel.component';
 
-export const staticContentBaseURL: string = "http://localhost:8000/";
 export const baseURL: string = "api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
   'Accept': 'application/json', 
@@ -52,7 +52,8 @@ export function emptyStringsToNull(form: FormGroup){
     RssFeedPageComponent,
     TourCardComponent,
     TourPageComponent,
-    WeatherCardComponent
+    WeatherCardComponent,
+    PictureCarouselComponent
   ],
   imports: [
     BrowserModule,

@@ -42,12 +42,39 @@
             <h1 [ngStyle]="{'color': cardFormSuccess ? 'green' : 'red'}">{{cardFormMessage}}</h1>
         </div>
     </div>
-  </div>
+</div>
 
-  <div *ngIf="showTimer">
+<div *ngIf="showTimer" class="row">
     <h1>Obilazak počinje za: {{remainingDays + ' dana, ' + remainingHours + ' sati, ' + remainingMinutes + ' minuta, ' + remainingSeconds + ' sekundi'}}</h1>
-  </div>
+</div>
 
-  <div *ngIf="showTour">
+<div *ngIf="showTour" class="row g-2">
+    <div *ngIf="pictures">
+        <div class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <app-picture-carousel [pictureURLs]="pictures">
 
-  </div>
+                </app-picture-carousel>    
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="youtubeVideoURL">
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe width="560" 
+                height="315" 
+                [src]="youtubeVideoURL" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allowfullscreen
+                class="embed-responsive-item">
+            </iframe>
+        </div>
+    </div>
+
+    <div *ngIf="video" id="video-wrapper">
+        <video controls id="video">
+            <source [src]="video.uri">
+        </video> 
+    </div>
+</div>
