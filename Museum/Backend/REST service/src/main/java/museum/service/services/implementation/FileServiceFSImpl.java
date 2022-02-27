@@ -1,11 +1,13 @@
 package museum.service.services.implementation;
 
 import museum.service.services.FileService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -15,10 +17,15 @@ import java.nio.file.Paths;
 @Service
 public class FileServiceFSImpl implements FileService
 {
-    private final Path root = Paths.get("uploads");
+    @Value("${static_resources_path}")
+    private String resourcesPath;
 
-    public FileServiceFSImpl()
+    private Path root;
+
+    @PostConstruct
+    private void postConstruct()
     {
+        this.root = Paths.get(resourcesPath);
         try
         {
             if(Files.exists(root) == false)
