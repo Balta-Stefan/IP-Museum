@@ -1,6 +1,8 @@
 package museum.service.services.implementation;
 
+import museum.service.models.entities.MuseumEntity;
 import museum.service.models.entities.UserEntity;
+import museum.service.repositories.MuseumsRepository;
 import museum.service.repositories.UserRepository;
 import museum.service.services.AdminInfoService;
 import org.modelmapper.ModelMapper;
@@ -21,16 +23,18 @@ public class AdminInfoServiceImpl implements AdminInfoService
 {
     private final UserWatcherService userWatcherService;
     private final UserRepository userRepository;
+    private final MuseumsRepository museumsRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final int passwordLengthBytes = 16;
 
     private final ModelMapper modelMapper;
 
-    public AdminInfoServiceImpl(UserWatcherService userWatcherService, UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper)
+    public AdminInfoServiceImpl(UserWatcherService userWatcherService, UserRepository userRepository, MuseumsRepository museumsRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper)
     {
         this.userWatcherService = userWatcherService;
         this.userRepository = userRepository;
+        this.museumsRepository = museumsRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
@@ -112,5 +116,11 @@ public class AdminInfoServiceImpl implements AdminInfoService
         userRepository.save(user);
 
         return stringPass;
+    }
+
+    @Override
+    public Page<MuseumEntity> getMuseums(int pageNumber, int pageSize)
+    {
+        return this.museumsRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 }

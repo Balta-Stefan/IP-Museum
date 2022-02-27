@@ -12,7 +12,7 @@
                     <a href="./users">Korisnici</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Muzeji</a>
+                    <a href="./museums">Muzeji</a>
                 </li>
                 <li class="nav-item">
                     <a href="#">Obilasci</a>

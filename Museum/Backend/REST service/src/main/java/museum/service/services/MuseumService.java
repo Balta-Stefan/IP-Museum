@@ -19,4 +19,6 @@ public interface MuseumService
 
     List<WeatherDTO> getWeather(Integer museumID);
     void addStaticContent(Integer tourID, List<TourStaticContentDTO> staticContentDTOS);
+
+    MuseumDTO createMuseum(MuseumDTO museum);
 }

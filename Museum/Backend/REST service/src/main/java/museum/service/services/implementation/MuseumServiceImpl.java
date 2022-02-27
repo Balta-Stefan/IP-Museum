@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.Duration;
@@ -40,6 +42,9 @@ public class MuseumServiceImpl implements MuseumService
 
     private final ModelMapper modelMapper;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Value("${transactions.notify_url}")
     private String transactionNotificationURL;
 
@@ -51,6 +56,8 @@ public class MuseumServiceImpl implements MuseumService
 
     @Value("${bank_url}")
     private String bank_url;
+
+    private final long monoTimeoutSeconds = 5;
 
 
     public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, CountriesService countriesService, WeatherService weatherService, ModelMapper modelMapper)
@@ -241,16 +248,29 @@ public class MuseumServiceImpl implements MuseumService
     public List<WeatherDTO> getWeather(Integer museumID)
     {
         MuseumEntity museum = museumsRepository.findById(museumID).orElseThrow(NotFoundException::new);
-        List<RegionDTO> regions = countriesService.getRegions(museum.getCountryAlpha2Code());
-        if(regions.size() == 0)
+        Optional<RegionDTO[]> regionsOptional = countriesService
+                .getRegions(museum.getCountryAlpha2Code())
+                .blockOptional(Duration.ofSeconds(monoTimeoutSeconds));
+
+        if(regionsOptional.isEmpty() || regionsOptional.get().length == 0)
         {
             return Collections.emptyList();
         }
+        RegionDTO[] regions = regionsOptional.get();
 
         Random rnd = new Random();
-        RegionDTO randomRegion = regions.get(rnd.nextInt(regions.size()));
+        RegionDTO randomRegion = regions[rnd.nextInt(regions.length)];
 
-        List<CityDTO> cities = countriesService.getCities(museum.getCountryAlpha2Code(), randomRegion.getRegion());
+        Optional<CityDTO[]> citiesOptional = countriesService
+                .getCities(museum.getCountryAlpha2Code(), randomRegion.getRegion())
+                .blockOptional(Duration.ofSeconds(monoTimeoutSeconds));
+
+        if(citiesOptional.isEmpty() || citiesOptional.get().length == 0)
+        {
+            return Collections.emptyList();
+        }
+        List<CityDTO> cities = Arrays.asList(citiesOptional.get());
+
         List<CityDTO> randomCities = new ArrayList<>();
 
         final int numOfCitiesToSelect = 3;
@@ -294,5 +314,17 @@ public class MuseumServiceImpl implements MuseumService
 
         tourEntity.getStaticContent().addAll(staticContent);
         toursRepository.saveAndFlush(tourEntity);
+    }
+
+    @Override
+    public MuseumDTO createMuseum(MuseumDTO museum)
+    {
+        MuseumEntity museumEntity = modelMapper.map(museum, MuseumEntity.class);
+        museumEntity.setMuseumId(null);
+
+        museumEntity = museumsRepository.save(museumEntity);
+        entityManager.refresh(museumEntity);
+
+        return modelMapper.map(museumEntity, MuseumDTO.class);
     }
 }

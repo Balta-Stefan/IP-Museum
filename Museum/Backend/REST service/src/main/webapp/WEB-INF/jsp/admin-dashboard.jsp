@@ -27,7 +27,7 @@
 
     <div class="container-fluid vh-100">
         <div class="row g-2">
-            <div class="row">
+            <div class="row g-2">
                 <div class="col-md">
                     <h4>Broj trenutno prijavljenih korisnika: ${numOfLoggedInUsers}</h4>
                 </div>

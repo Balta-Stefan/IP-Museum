@@ -65,14 +65,13 @@
         </table>
         <nav>
             <ul class="pagination justify-content-center">
-                <!-- /users?onlyInactive=${onlyInactive}&pageNumber=${pageNumber}&pageSize=${pageSize} -->
-                <c:forEach begin="1" end="${totalPages}" varStatus="loop">
-                    <li class="page-item ${(loop.current-1 == pageNumber) ? 'active' : ''}">
-                        <a class="page-link" href="./users?onlyInactive=${onlyInactive}&pageNumber=${loop.index-1}&pageSize=${pageSize}">
-                            <c:out value="${loop.current}"/>
-                        </a>
-                    </li>
-                </c:forEach>
+            <c:forEach begin="1" end="${totalPages}" varStatus="loop">
+                <li class="page-item ${(loop.current-1 == pageNumber) ? 'active' : ''}">
+                    <a class="page-link" href="./users?onlyInactive=${onlyInactive}&pageNumber=${loop.index-1}&pageSize=${pageSize}">
+                        <c:out value="${loop.current}"/>
+                    </a>
+                </li>
+            </c:forEach>
             </ul>
         </nav>
         <p>Ukupno korisnika: ${totalUsers}</p>
