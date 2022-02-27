@@ -19,6 +19,10 @@ public class TourStaticContent
     @Column(name = "URI", nullable = false, length = 255)
     private String URI;
 
+    @Basic
+    @Column(name = "isYouTubeVideo")
+    private Boolean isYouTubeVideo;
+
     @ManyToOne
     @JoinColumn(name = "tour", referencedColumnName = "tourID", nullable = false)
     private TourEntity tour;

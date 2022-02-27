@@ -21,7 +21,10 @@ public class FileServiceFSImpl implements FileService
     {
         try
         {
-            Files.createDirectories(root);
+            if(Files.exists(root) == false)
+            {
+                Files.createDirectories(root);
+            }
         }
         catch (IOException e)
         {
@@ -30,9 +33,9 @@ public class FileServiceFSImpl implements FileService
     }
 
     @Override
-    public void save(MultipartFile file) throws IOException
+    public void save(MultipartFile file, String fileName) throws IOException
     {
-        Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
+        Files.copy(file.getInputStream(), this.root.resolve(fileName));
     }
 
     @Override

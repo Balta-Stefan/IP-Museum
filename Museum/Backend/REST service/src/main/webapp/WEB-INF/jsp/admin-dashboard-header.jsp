@@ -14,9 +14,6 @@
                 <li class="nav-item">
                     <a href="./museums">Muzeji</a>
                 </li>
-                <li class="nav-item">
-                    <a href="#">Obilasci</a>
-                </li>
             </ul>
             <form method="post" action="/admin/logout">
                 <button type="submit">Odjava</button>

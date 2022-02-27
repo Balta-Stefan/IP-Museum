@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `museum`.`TourStaticContent` (
   `tourStaticContentID` INT NOT NULL AUTO_INCREMENT,
   `URI` VARCHAR(255) NOT NULL,
   `tour` INT NOT NULL,
+  `isYouTubeVideo` TINYINT NULL,
   `type` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`tourStaticContentID`),
   INDEX `tour_idx` (`tour` ASC) VISIBLE,

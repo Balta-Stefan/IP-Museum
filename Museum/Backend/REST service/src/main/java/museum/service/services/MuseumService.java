@@ -3,6 +3,7 @@ package museum.service.services;
 
 import museum.service.models.DTOs.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,4 +22,5 @@ public interface MuseumService
     void addStaticContent(Integer tourID, List<TourStaticContentDTO> staticContentDTOS);
 
     MuseumDTO createMuseum(MuseumDTO museum);
+    TourDTO addTour(Integer museumID, FormTourDTO tourDTO) throws IOException;
 }

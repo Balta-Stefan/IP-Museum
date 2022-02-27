@@ -8,6 +8,6 @@ import java.net.MalformedURLException;
 
 public interface FileService
 {
-    void save(MultipartFile file) throws IOException;
+    void save(MultipartFile file, String fileName) throws IOException;
     Resource load(String filename) throws MalformedURLException;
 }

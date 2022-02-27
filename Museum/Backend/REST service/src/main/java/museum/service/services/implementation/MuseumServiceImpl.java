@@ -1,21 +1,24 @@
 package museum.service.services.implementation;
 
 import museum.service.exceptions.ConflictException;
-import museum.service.exceptions.ForbiddenException;
 import museum.service.exceptions.NotFoundException;
 import museum.service.models.DTOs.*;
 import museum.service.models.entities.*;
+import museum.service.models.enums.StaticResourceType;
 import museum.service.models.requests.PaymentRequest;
 import museum.service.models.responses.PaymentRequestResponse;
 import museum.service.repositories.*;
 import museum.service.services.CountriesService;
+import museum.service.services.FileService;
 import museum.service.services.MuseumService;
 import museum.service.services.WeatherService;
+import org.apache.logging.log4j.util.Strings;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -23,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,8 +41,10 @@ public class MuseumServiceImpl implements MuseumService
     private final MuseumsRepository museumsRepository;
     private final TourTicketsRepository tourTicketsRepository;
     private final MuseumTypeRepository museumTypeRepository;
+    private final TourStaticContentRepository tourStaticContentRepository;
     private final CountriesService countriesService;
     private final WeatherService weatherService;
+    private final FileService fileService;
 
     private final ModelMapper modelMapper;
 
@@ -60,15 +66,17 @@ public class MuseumServiceImpl implements MuseumService
     private final long monoTimeoutSeconds = 5;
 
 
-    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, CountriesService countriesService, WeatherService weatherService, ModelMapper modelMapper)
+    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, TourStaticContentRepository tourStaticContentRepository, CountriesService countriesService, WeatherService weatherService, FileService fileService, ModelMapper modelMapper)
     {
         this.toursRepository = toursRepository;
         this.userRepository = userRepository;
         this.museumsRepository = museumsRepository;
         this.tourTicketsRepository = tourTicketsRepository;
         this.museumTypeRepository = museumTypeRepository;
+        this.tourStaticContentRepository = tourStaticContentRepository;
         this.countriesService = countriesService;
         this.weatherService = weatherService;
+        this.fileService = fileService;
         this.modelMapper = modelMapper;
     }
 
@@ -326,5 +334,77 @@ public class MuseumServiceImpl implements MuseumService
         entityManager.refresh(museumEntity);
 
         return modelMapper.map(museumEntity, MuseumDTO.class);
+    }
+
+    @Override
+    public TourDTO addTour(Integer museumID, FormTourDTO tourDTO) throws IOException
+    {
+        MuseumEntity museumEntity = museumsRepository.findById(museumID).orElseThrow(NotFoundException::new);
+
+        TourEntity tourEntity = new TourEntity();
+
+        LocalDateTime startDateTime = LocalDateTime.of(tourDTO.getStartDate(), tourDTO.getStartTime());
+
+        tourEntity.setStartTimestamp(startDateTime);
+        tourEntity.setEndTimeStamp(startDateTime.plusHours(tourDTO.getDurationHours()));
+        tourEntity.setPrice(tourDTO.getPrice());
+        tourEntity.setMuseum(museumEntity);
+
+        tourEntity = toursRepository.saveAndFlush(tourEntity);
+        entityManager.refresh(tourEntity);
+
+        List<TourStaticContentDTO> contentDTOS = new ArrayList<>();
+        // save static files.File name will be formed as: tourID + UUID
+        String youtubeLink = tourDTO.getYoutubeLink();
+        if(youtubeLink != null && youtubeLink.trim().equals(Strings.EMPTY) == false)
+        {
+            TourStaticContentDTO tmp = new TourStaticContentDTO();
+            tmp.setURI(tourDTO.getYoutubeLink());
+            tmp.setIsYouTubeVideo(true);
+            tmp.setResourceType(StaticResourceType.VIDEO);
+
+            contentDTOS.add(tmp);
+        }
+        for(MultipartFile f : tourDTO.getPictures())
+        {
+            TourStaticContentDTO tmp = new TourStaticContentDTO();
+            tmp.setIsYouTubeVideo(false);
+            tmp.setResourceType(StaticResourceType.PICTURE);
+
+            String fileName = tourEntity.getTourId() + UUID.randomUUID().toString() + "." + f.getContentType().split("/")[1];
+            tmp.setURI(fileName);
+            this.fileService.save(f, fileName);
+
+            contentDTOS.add(tmp);
+        }
+        MultipartFile video = tourDTO.getVideo();
+        if(video != null)
+        {
+            TourStaticContentDTO tmp = new TourStaticContentDTO();
+            tmp.setIsYouTubeVideo(false);
+            tmp.setResourceType(StaticResourceType.VIDEO);
+
+            // set URI
+            String fileName = tourEntity.getTourId() + UUID.randomUUID().toString() + "." + video.getContentType().split("/")[1];
+            tmp.setURI(fileName);
+
+            this.fileService.save(video, fileName);
+
+            contentDTOS.add(tmp);
+        }
+
+        for(TourStaticContentDTO t : contentDTOS)
+        {
+            TourStaticContent tmp = modelMapper.map(t, TourStaticContent.class);
+            tmp.setStaticContentID(null);
+            tmp.setTour(tourEntity);
+
+            tourStaticContentRepository.saveAndFlush(tmp);
+        }
+
+        entityManager.refresh(tourEntity);
+
+
+        return modelMapper.map(tourEntity, TourDTO.class);
     }
 }

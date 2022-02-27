@@ -14,9 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -174,6 +176,26 @@ public class AdminDashboardController
         return "museums-panel";
     }
 
+    @GetMapping("/museums/{museumID}/tours")
+    public String getMuseumTours(@PathVariable Integer museumID, Model model)
+    {
+        MuseumDTO museumDTO = museumService.getMuseum(museumID);
+
+        model.addAttribute("museum", museumDTO);
+
+        return "museum-tours-panel";
+    }
+
+    @PostMapping("/museums/{museumID}/tours")
+    public String addMuseumTour(@PathVariable Integer museumID, Model model,
+                                @Valid @ModelAttribute FormTourDTO tourDTO) throws IOException
+    {
+        TourDTO tour = this.museumService.addTour(museumID, tourDTO);
+
+        model.addAttribute("tourSubmitMessage", "Posjeta uspješno dodana.");
+        return "museum-tours-panel";
+    }
+
 
     @GetMapping("/museums/new")
     public String getCreateMuseumForm(Model model)
@@ -219,9 +241,5 @@ public class AdminDashboardController
         return "add-new-museum";
     }
 
-    @GetMapping("/museums/{museumID}/tours")
-    public String getToursPanel(@PathVariable Integer museumID, Model model)
-    {
-        return "museum-tours-panel";
-    }
+
 }

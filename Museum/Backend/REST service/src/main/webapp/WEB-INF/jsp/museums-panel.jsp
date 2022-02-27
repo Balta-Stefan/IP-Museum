@@ -22,6 +22,7 @@
                     <th scope="col">Država</th>
                     <th scope="col">Grad</th>
                     <th scope="col">Tip</th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,9 @@
                         <td>${museum.getCountry()}</td>
                         <td>${museum.getCity()}</td>
                         <td>${museum.getType().getType()}</td>
+                        <td>
+                            <a class="btn btn-primary" href="./museums/${museum.getMuseumID()}/tours">Obilasci</a>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>

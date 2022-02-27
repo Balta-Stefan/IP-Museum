@@ -14,6 +14,8 @@ public class TourStaticContentDTO
     @NotBlank
     private String URI;
 
+    private Boolean isYouTubeVideo;
+
     @NotNull
     private StaticResourceType resourceType;
 }
