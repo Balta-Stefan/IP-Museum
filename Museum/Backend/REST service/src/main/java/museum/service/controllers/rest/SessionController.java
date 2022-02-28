@@ -4,7 +4,6 @@ import museum.service.models.CustomUserDetails;
 import museum.service.models.requests.LoginDetails;
 import museum.service.models.responses.LoginResponse;
 import museum.service.services.UserSessionService;
-import museum.service.services.implementation.UserWatcherService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +17,6 @@ import javax.validation.Valid;
 public class SessionController
 {
     private final UserSessionService userSessionService;
-
-
-    /*@Value("${token.validity_days}")
-    private Integer tokenValidity_days;*/
 
     public SessionController(UserSessionService userSessionService)
     {

@@ -1,6 +1,8 @@
 package museum.service.security;
 
+import museum.service.models.CustomUserDetails;
 import museum.service.models.entities.AccesstokenEntity;
+import museum.service.models.entities.UserEntity;
 import museum.service.models.enums.Roles;
 import museum.service.repositories.AccessTokensRepository;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -45,8 +47,6 @@ public class AdminTokenAuthenticationProvider implements AuthenticationProvider
         }
 
         Roles userRole = tokenEntity.getUser().getRole();
-
-
 
         return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), token, List.of(new SimpleGrantedAuthority(userRole.name())));
     }

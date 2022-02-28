@@ -1,5 +1,7 @@
 package museum.service.security;
 
+import museum.service.filters.PostAuthenticationLoggingFilter;
+import museum.service.filters.PreAuthenticationLoggingFilter;
 import museum.service.filters.JwtAuthorizationFilter;
 import museum.service.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 
 @Configuration
@@ -68,6 +69,7 @@ public class SecurityConfig
                                     .logoutSuccessUrl("/"));
         }
 
+
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception
         {
@@ -83,12 +85,16 @@ public class SecurityConfig
         private final UserDetailsService customUserDetailsService;
         private final PasswordEncoder passwordEncoder;
         private final JwtAuthorizationFilter authorizationFilter;
+        private final PreAuthenticationLoggingFilter preAuthLoggingFilter;
+        private final PostAuthenticationLoggingFilter postAuthenticationLoggingFilter;
 
-        public RestSecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, JwtAuthorizationFilter authorizationFilter)
+        public RestSecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, JwtAuthorizationFilter authorizationFilter, PreAuthenticationLoggingFilter preJwtCheckLoggingFilter, PostAuthenticationLoggingFilter postAuthenticationLoggingFilter)
         {
             this.customUserDetailsService = customUserDetailsService;
             this.passwordEncoder = passwordEncoder;
             this.authorizationFilter = authorizationFilter;
+            this.preAuthLoggingFilter = preJwtCheckLoggingFilter;
+            this.postAuthenticationLoggingFilter = postAuthenticationLoggingFilter;
         }
 
         @Override
@@ -111,7 +117,8 @@ public class SecurityConfig
                     .antMatchers(HttpMethod.POST, "/api/v1/session/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(preAuthLoggingFilter, JwtAuthorizationFilter.class); // this will be applied to MVC endpoints too, despite the antMatcher for api endpoint above....
         }
 
         @Bean
@@ -124,6 +131,17 @@ public class SecurityConfig
 
             return registrationBean;
         }
+
+        /*@Bean
+        public FilterRegistrationBean<PreAuthenticationLoggingFilter> preJwtCheckFilter()
+        {
+            FilterRegistrationBean<PreAuthenticationLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+
+            registrationBean.setFilter(preJwtCheckLoggingFilter);
+            registrationBean.addUrlPatterns("/api/v1/*");
+
+            return registrationBean;
+        }*/
 
         @Bean
         public DaoAuthenticationProvider daoAuthenticationProvider()
