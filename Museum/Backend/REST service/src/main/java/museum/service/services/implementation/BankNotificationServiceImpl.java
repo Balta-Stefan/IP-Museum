@@ -61,9 +61,12 @@ public class BankNotificationServiceImpl implements BankNotificationService
         }
 
         tourPurchase.setPaid(LocalDateTime.now());
-        tourTicketsRepository.saveAndFlush(tourPurchase);
+        tourPurchase = tourTicketsRepository.saveAndFlush(tourPurchase);
 
         TourDTO tourDTO = modelMapper.map(tourPurchase.getTour(), TourDTO.class);
+        tourDTO.setPurchased(tourPurchase.getPurchased());
+        tourDTO.setPaid(tourPurchase.getPaid());
+
         TourPurchaseDTO tourPurchaseDTO = modelMapper.map(tourPurchase, TourPurchaseDTO.class);
 
         UserEntity buyer = tourPurchase.getUser();
