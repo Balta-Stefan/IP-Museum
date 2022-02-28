@@ -20,7 +20,6 @@ public class PostAuthenticationLoggingFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
-        System.out.println("inside post authentication logging filter");
         String logID = (String)request.getSession().getAttribute("Log ID");
 
 
