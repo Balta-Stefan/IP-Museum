@@ -330,7 +330,7 @@ public class MuseumServiceImpl implements MuseumService
         MuseumEntity museumEntity = modelMapper.map(museum, MuseumEntity.class);
         museumEntity.setMuseumId(null);
 
-        museumEntity = museumsRepository.save(museumEntity);
+        museumEntity = museumsRepository.saveAndFlush(museumEntity);
         entityManager.refresh(museumEntity);
 
         return modelMapper.map(museumEntity, MuseumDTO.class);

@@ -88,7 +88,7 @@ public class AdminInfoServiceImpl implements AdminInfoService
         userEntity.setActive(active);
 
 
-        userEntity = userRepository.save(userEntity);
+        userEntity = userRepository.saveAndFlush(userEntity);
 
         return true;
     }
@@ -113,7 +113,7 @@ public class AdminInfoServiceImpl implements AdminInfoService
 
         String encodedPass = this.passwordEncoder.encode(stringPass);
         user.setPassword(encodedPass);
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
 
         return stringPass;
     }

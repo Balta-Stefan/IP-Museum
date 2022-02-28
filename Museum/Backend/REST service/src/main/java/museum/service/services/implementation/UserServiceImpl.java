@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService
             user.setRole(Roles.ADMIN);
             user.setActive(true);
 
-            userRepository.save(user);
+            userRepository.saveAndFlush(user);
         }
     }
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService
         user.setActive(false);
 
 
-        user = userRepository.save(user);
+        user = userRepository.saveAndFlush(user);
         entityManager.refresh(user);
 
         return modelMapper.map(user, UserDTO.class);
