@@ -1,20 +1,15 @@
 package museum.service.services.implementation;
 
-import museum.service.exceptions.BadRequestException;
 import museum.service.exceptions.ConflictException;
 import museum.service.exceptions.ForbiddenException;
-import museum.service.exceptions.NotFoundException;
 import museum.service.models.CustomUserDetails;
-import museum.service.models.DTOs.AccessTokenDTO;
 import museum.service.models.DTOs.UserDTO;
-import museum.service.models.entities.AccesstokenEntity;
 import museum.service.models.entities.UserEntity;
 import museum.service.models.enums.Roles;
 import museum.service.services.UserService;
 import museum.service.repositories.AccessTokensRepository;
 import museum.service.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +19,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 @Transactional
 @Service

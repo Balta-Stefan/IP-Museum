@@ -42,6 +42,22 @@ CREATE TABLE IF NOT EXISTS `museum`.`Museums` (
   `thumbnail` VARCHAR(255) NULL,
   `type` INT NOT NULL,
   `countryAlpha2Code` CHAR(2) NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL,
+  `createdBy` INT NOT NULL,
+  `updatedBy` INT NULL,
+  INDEX `museums_createdBy_idx` (`createdBy` ASC) VISIBLE,
+  INDEX `museums_updatedBy_idx` (`updatedBy` ASC) VISIBLE,
+  CONSTRAINT `museums_createdBy_FK`
+    FOREIGN KEY (`createdBy`)
+    REFERENCES `museum`.`users` (`userID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `museums_updatedBy_FK`
+    FOREIGN KEY (`updatedBy`)
+    REFERENCES `museum`.`users` (`userID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   PRIMARY KEY (`museumID`),
   INDEX `type_idx` (`type` ASC) VISIBLE,
   CONSTRAINT `museums_type_FK`
@@ -64,6 +80,15 @@ CREATE TABLE IF NOT EXISTS `museum`.`Users` (
   `password` VARCHAR(255) NOT NULL,
   `role` VARCHAR(45) NOT NULL,
   `active` TINYINT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL,
+  `updatedBy` INT NULL,
+  INDEX `users_updatedBy_idx` (`updatedBy` ASC) VISIBLE,
+  CONSTRAINT `users_updatedBy_FK`
+    FOREIGN KEY (`updatedBy`)
+    REFERENCES `museum`.`users` (`userID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   PRIMARY KEY (`userID`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
@@ -79,6 +104,22 @@ CREATE TABLE IF NOT EXISTS `museum`.`Tours` (
   `startTimestamp` DATETIME NOT NULL,
   `endTimeStamp` DATETIME NOT NULL,
   `price` DECIMAL(10,4) NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NULL,
+  `createdBy` INT NOT NULL,
+  `updatedBy` INT NULL,
+  INDEX `tours_createdBy_idx` (`createdBy` ASC) VISIBLE,
+  INDEX `tours_updatedBy_idx` (`updatedBy` ASC) VISIBLE,
+  CONSTRAINT `tours_createdBy_FK`
+    FOREIGN KEY (`createdBy`)
+    REFERENCES `museum`.`users` (`userID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `tours_updatedBy_FK`
+    FOREIGN KEY (`updatedBy`)
+    REFERENCES `museum`.`users` (`userID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   PRIMARY KEY (`tourID`),
   INDEX `museum_idx` (`museum` ASC) VISIBLE,
   CONSTRAINT `museum`

@@ -29,7 +29,7 @@ public class AdminTokenAuthenticationProvider implements AuthenticationProvider
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
-        String token = authentication.getName();
+        String token = (String)authentication.getCredentials();
 
         Optional<AccesstokenEntity> tokenEntityOpt = tokensRepository.findById(UUID.fromString(token));
 
@@ -48,7 +48,7 @@ public class AdminTokenAuthenticationProvider implements AuthenticationProvider
 
 
 
-        return new UsernamePasswordAuthenticationToken(token, null, List.of(new SimpleGrantedAuthority(userRole.name())));
+        return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), token, List.of(new SimpleGrantedAuthority(userRole.name())));
     }
 
     @Override

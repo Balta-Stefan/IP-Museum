@@ -1,14 +1,22 @@
 package museum.service.models.entities;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "museums")
+@EntityListeners(AuditingEntityListener.class)
 public class MuseumEntity
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +59,27 @@ public class MuseumEntity
     @Basic
     @Column(name = "countryAlpha2Code", length = 2, nullable = false)
     private String countryAlpha2Code;
+
+    @Basic
+    @Column(name = "createdAt", updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Basic
+    @Column(name = "updatedAt")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @CreatedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "createdBy", updatable = false)
+    private UserEntity createdBy;
+
+    @LastModifiedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updatedBy")
+    private UserEntity updatedBy;
+
 
     @OneToMany(mappedBy = "museum")
     private List<TourEntity> tours;

@@ -2,13 +2,19 @@ package museum.service.models.entities;
 
 import lombok.*;
 import museum.service.models.enums.Roles;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class UserEntity
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +50,24 @@ public class UserEntity
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Roles role;
+
+    @Basic
+    @Column(name = "createdAt", updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Basic
+    @Column(name = "updatedAt")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @LastModifiedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updatedBy")
+    private UserEntity updatedBy;
+
+
+
 
     @OneToMany(mappedBy = "user")
     private List<AccesstokenEntity> accessTokens;

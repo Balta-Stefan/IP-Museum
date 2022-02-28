@@ -1,7 +1,9 @@
 package museum.service.services.implementation;
 
 import museum.service.exceptions.UnauthorizedException;
+import museum.service.models.CustomUserDetails;
 import museum.service.models.entities.AccesstokenEntity;
+import museum.service.models.entities.UserEntity;
 import museum.service.models.enums.Roles;
 import museum.service.repositories.AccessTokensRepository;
 import museum.service.security.AdminTokenAuthenticationProvider;
@@ -32,6 +34,13 @@ public class AdminLoginServiceImpl implements AdminLoginService
     public Boolean loginAdmin(String token)
     {
         AccesstokenEntity accessToken = tokensRepository.findById(UUID.fromString(token)).orElseThrow(UnauthorizedException::new);
+        UserEntity userEntity = accessToken.getUser();
+
+        CustomUserDetails userDetails = new CustomUserDetails(userEntity.getUserId(),
+                userEntity.getUsername(),
+                null,
+                userEntity.getActive(),
+                userEntity.getRole(), null);
 
         if(LocalDateTime.now().isAfter(accessToken.getValidUntil()) || accessToken.getValid() == false)
         {
@@ -42,7 +51,7 @@ public class AdminLoginServiceImpl implements AdminLoginService
         {
             Roles userRole = accessToken.getUser().getRole();
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(token, null);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, token, null);
 
             Authentication authentication = authenticationManager.authenticate(authToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
