@@ -85,16 +85,12 @@ public class SecurityConfig
         private final UserDetailsService customUserDetailsService;
         private final PasswordEncoder passwordEncoder;
         private final JwtAuthorizationFilter authorizationFilter;
-        private final PreAuthenticationLoggingFilter preAuthLoggingFilter;
-        private final PostAuthenticationLoggingFilter postAuthenticationLoggingFilter;
 
-        public RestSecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, JwtAuthorizationFilter authorizationFilter, PreAuthenticationLoggingFilter preJwtCheckLoggingFilter, PostAuthenticationLoggingFilter postAuthenticationLoggingFilter)
+        public RestSecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, JwtAuthorizationFilter authorizationFilter)
         {
             this.customUserDetailsService = customUserDetailsService;
             this.passwordEncoder = passwordEncoder;
             this.authorizationFilter = authorizationFilter;
-            this.preAuthLoggingFilter = preJwtCheckLoggingFilter;
-            this.postAuthenticationLoggingFilter = postAuthenticationLoggingFilter;
         }
 
         @Override
