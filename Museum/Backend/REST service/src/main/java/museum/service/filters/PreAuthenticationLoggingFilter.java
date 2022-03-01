@@ -1,6 +1,8 @@
 package museum.service.filters;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,11 +18,13 @@ import java.util.UUID;
 
 @Slf4j
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class PreAuthenticationLoggingFilter extends OncePerRequestFilter
 {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
+        System.out.println("Pre auth filter");
         String remoteUser = request.getRemoteUser();
         String userIP = request.getRemoteAddr();
         String remoteHost = request.getRemoteHost();

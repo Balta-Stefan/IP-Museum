@@ -2,6 +2,7 @@ package museum.service.filters;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.enums.Roles;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter
 {
-
     @Value("${jwt.authorization_header.name}")
     private String authorizationHeaderName;
 
@@ -33,6 +34,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
+        System.out.println("JWT auth filter");
         String authorizationHeader = request.getHeader(authorizationHeaderName);
         if(authorizationHeader == null || authorizationHeader.startsWith(authorizationHeaderPrefix) == false)
         {
@@ -56,7 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.warn("JWT auth filter has thrown an exception: ", e);
         }
 
         filterChain.doFilter(request, response);

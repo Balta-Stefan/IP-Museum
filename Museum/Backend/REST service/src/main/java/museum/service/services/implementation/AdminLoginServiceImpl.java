@@ -1,5 +1,6 @@
 package museum.service.services.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import museum.service.exceptions.UnauthorizedException;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.entities.AccesstokenEntity;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
+@Slf4j
 public class AdminLoginServiceImpl implements AdminLoginService
 {
     private final AccessTokensRepository tokensRepository;
@@ -61,6 +63,7 @@ public class AdminLoginServiceImpl implements AdminLoginService
         }
         catch(Exception e)
         {
+            log.warn("Admin login service has thrown an exception: ", e);
             throw new UnauthorizedException();
         }
         return true;

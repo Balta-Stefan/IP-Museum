@@ -2,6 +2,7 @@ package museum.service.services.implementation;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import museum.service.exceptions.UnauthorizedException;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.entities.AccesstokenEntity;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class UserSessionServiceImpl implements UserSessionService
 {
     private final AuthenticationManager authenticationManager;
@@ -107,6 +109,7 @@ public class UserSessionServiceImpl implements UserSessionService
         }
         catch(Exception e)
         {
+            log.warn("User session service has thrown an exception: ", e);
             throw new UnauthorizedException();
         }
    }

@@ -1,5 +1,6 @@
 package museum.service.services.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import museum.service.services.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
+@Slf4j
 public class FileServiceFSImpl implements FileService
 {
     @Value("${static_resources_path}")
@@ -35,6 +37,7 @@ public class FileServiceFSImpl implements FileService
         }
         catch (IOException e)
         {
+            log.warn("File service could not initialize upload directory: " , e);
             throw new RuntimeException("Could not initialize file upload directory");
         }
     }

@@ -117,8 +117,8 @@ public class SecurityConfig
                     .antMatchers(HttpMethod.POST, "/api/v1/session/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(preAuthLoggingFilter, JwtAuthorizationFilter.class); // this will be applied to MVC endpoints too, despite the antMatcher for api endpoint above....
+                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+                    //.addFilterBefore(preAuthLoggingFilter, JwtAuthorizationFilter.class); // this will be applied to MVC endpoints too, despite the antMatcher for api endpoint above....
         }
 
         @Bean
@@ -131,17 +131,6 @@ public class SecurityConfig
 
             return registrationBean;
         }
-
-        /*@Bean
-        public FilterRegistrationBean<PreAuthenticationLoggingFilter> preJwtCheckFilter()
-        {
-            FilterRegistrationBean<PreAuthenticationLoggingFilter> registrationBean = new FilterRegistrationBean<>();
-
-            registrationBean.setFilter(preJwtCheckLoggingFilter);
-            registrationBean.addUrlPatterns("/api/v1/*");
-
-            return registrationBean;
-        }*/
 
         @Bean
         public DaoAuthenticationProvider daoAuthenticationProvider()

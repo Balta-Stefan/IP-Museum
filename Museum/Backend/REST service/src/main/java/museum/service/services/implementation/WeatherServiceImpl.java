@@ -1,5 +1,6 @@
 package museum.service.services.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import museum.service.models.DTOs.WeatherDTO;
 import museum.service.services.WeatherService;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 
 @Service
+@Slf4j
 public class WeatherServiceImpl implements WeatherService
 {
     @Value("${api.url.weather}")
@@ -43,7 +45,7 @@ public class WeatherServiceImpl implements WeatherService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.warn("Weather serviec has thrown an exception: ", e);
         }
 
         return null;

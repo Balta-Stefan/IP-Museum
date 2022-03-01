@@ -5,6 +5,7 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import lombok.extern.slf4j.Slf4j;
 import museum.service.models.DTOs.RSSFeedEntry;
 import museum.service.services.RSSReaderService;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class RSSReaderServiceImpl implements RSSReaderService
 {
     @Override
@@ -66,7 +68,7 @@ public class RSSReaderServiceImpl implements RSSReaderService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.warn("RSS service has thrown an exception: ", e);
             return Collections.emptyList();
         }
     }

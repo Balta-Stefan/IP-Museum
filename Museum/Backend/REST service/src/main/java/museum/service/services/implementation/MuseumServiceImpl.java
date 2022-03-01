@@ -63,7 +63,7 @@ public class MuseumServiceImpl implements MuseumService
     @Value("${bank_url}")
     private String bank_url;
 
-    private final long monoTimeoutSeconds = 5;
+    private final long monoTimeoutSeconds = 6;
 
 
     public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, TourStaticContentRepository tourStaticContentRepository, CountriesService countriesService, WeatherService weatherService, FileService fileService, ModelMapper modelMapper)

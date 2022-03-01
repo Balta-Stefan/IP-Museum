@@ -1,5 +1,6 @@
 package museum.service.controllers.mvc;
 
+import lombok.extern.slf4j.Slf4j;
 import museum.service.models.DTOs.*;
 import museum.service.models.entities.MuseumEntity;
 import museum.service.models.entities.MuseumTypeEntity;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/admin")
 //@PreAuthorize("hasAuthority('ADMIN')")
+@Slf4j
 public class AdminDashboardController
 {
     private final AdminLoginService adminLoginService;
@@ -215,7 +217,7 @@ public class AdminDashboardController
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.warn("Admin dashboard controller has thrown an exception: ", e);
         }
 
         return "add-new-museum";

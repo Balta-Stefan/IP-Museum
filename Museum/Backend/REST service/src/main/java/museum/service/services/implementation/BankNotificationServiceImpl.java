@@ -1,5 +1,6 @@
 package museum.service.services.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import museum.service.models.DTOs.BankNotificationDTO;
 import museum.service.models.DTOs.TourDTO;
 import museum.service.models.DTOs.TourPurchaseDTO;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
+@Slf4j
 public class BankNotificationServiceImpl implements BankNotificationService
 {
     private final ModelMapper modelMapper;
@@ -80,7 +82,7 @@ public class BankNotificationServiceImpl implements BankNotificationService
         catch(Exception e)
         {
             // log the exception
-            e.printStackTrace();
+            log.warn("Bank notification service has thrown an exception: ", e);
         }
     }
 }
