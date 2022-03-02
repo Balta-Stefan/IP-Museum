@@ -203,13 +203,13 @@ public class AdminDashboardController
     @GetMapping("/museums/new")
     public String getCreateMuseumForm(Model model)
     {
-        Mono<CountryDTO[]> countriesMono = this.countriesService.getCountries();
+        //Mono<CountryDTO[]> countriesMono = this.countriesService.getCountries();
 
         List<MuseumTypeDTO> museumTypes = this.museumService.getMuseumTypes();
 
         model.addAttribute("museumTypes", museumTypes);
 
-        try
+        /*try
         {
             Optional<CountryDTO[]> countriesOptional = countriesMono.blockOptional(Duration.ofSeconds(monoTimeoutSeconds));
             CountryDTO[] countries = countriesOptional.orElseGet(() -> new CountryDTO[0]);
@@ -219,7 +219,7 @@ public class AdminDashboardController
         catch(Exception e)
         {
             log.warn("Admin dashboard controller has thrown an exception: ", e);
-        }
+        }*/
 
         return "add-new-museum";
     }

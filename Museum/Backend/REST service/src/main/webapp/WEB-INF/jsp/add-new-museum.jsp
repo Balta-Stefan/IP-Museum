@@ -26,9 +26,9 @@
                     <label for="country" class="form-label">Država</label>
                     <select class="form-select" name="country" id="country">
                         <option selected disabled>Odaberite državu</option>
-                        <c:forEach var="country" items="${countries}" varStatus="loop">
+                        <!--<c:forEach var="country" items="${countries}" varStatus="loop">
                             <option value="${country.getCca2()}">${country.getName().getCommon()}</option>
-                        </c:forEach>
+                        </c:forEach>-->
                     </select>
                 </div>
                 <div class="mb-3">

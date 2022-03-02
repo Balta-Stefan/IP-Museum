@@ -10,6 +10,13 @@ function clearSelect(selectElement)
 
 async function getRegions()
 {
+    // clear regions and cities select
+    document.getElementById("region").options.length = 0;
+    document.getElementById("city").options.length = 0;
+    //clearSelect(document.getElementById("region"));
+    //clearSelect(document.getElementById("city"));
+
+
     const selectedCountry = document.getElementById("country").value;
     document.getElementById("countryAlpha2Code").value = selectedCountry;
 
@@ -18,11 +25,7 @@ async function getRegions()
     const response = await fetch(URL);
     const data = await response.json();
 
-    // clear regions and cities select
-    document.getElementById("region").options.length = 0;
-    document.getElementById("city").options.length = 0;
-    //clearSelect(document.getElementById("region"));
-    //clearSelect(document.getElementById("city"));
+
 
     const regionsSelect = document.getElementById("region");
 
@@ -38,6 +41,10 @@ async function getRegions()
 
 async function getCities()
 {
+    // clear cities select
+    document.getElementById("city").options.length = 0;
+    //clearSelect(document.getElementById("city"));
+
     // /countries/{country}/regions/{region}/cities
     const selectedCountry = document.getElementById("country").value;
     const selectedRegion = document.getElementById("region").value;
@@ -47,9 +54,7 @@ async function getCities()
     const response = await fetch(URL);
     const data = await response.json();
 
-    // clear cities select
-    document.getElementById("city").options.length = 0;
-    //clearSelect(document.getElementById("city"));
+
 
     const citySelect = document.getElementById("city");
 
@@ -63,7 +68,28 @@ async function getCities()
     }
 }
 
+async function getCountries()
+{
+    const countriesURL = "https://restcountries.com/v3.1/region/europe";
+
+    const response = await fetch(countriesURL);
+    const data = await response.json();
+
+    const countrySelect = document.getElementById("country");
+
+    for(const country of data)
+    {
+        let tempOpt = document.createElement("option");
+        tempOpt.value = country.cca2;
+        tempOpt.innerHTML = country.name.common;
+
+        countrySelect.appendChild(tempOpt);
+    }
+}
+
 window.addEventListener("load", function(){
-   document.getElementById("country").addEventListener("change", getRegions);
-   document.getElementById("region").addEventListener("change", getCities);
+    getCountries();
+
+    document.getElementById("country").addEventListener("change", getRegions);
+    document.getElementById("region").addEventListener("change", getCities);
 });
