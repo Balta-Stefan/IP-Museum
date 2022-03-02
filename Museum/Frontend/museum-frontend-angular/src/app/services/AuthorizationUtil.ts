@@ -1,11 +1,8 @@
 import { LoginDetails } from "../models/LoginDetails";
 
 export class AuthorizationUtils{
-    static userLogin(userDetails: LoginDetails, insertJwtIntoLocalStorage: boolean): void{
+    static userLogin(userDetails: LoginDetails): void{
         localStorage.setItem("userDetails", JSON.stringify(userDetails));
-        if(insertJwtIntoLocalStorage){
-            localStorage.setItem("jwt", userDetails.jwt);
-        }
     }
 
     static getUser(): LoginDetails | null{

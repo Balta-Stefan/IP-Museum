@@ -17,23 +17,14 @@ export class AppComponent {
 
     this.router.navigateByUrl('/session_check');
 
-    // check whether JWT is in local storage
-    const jwt: string | null = localStorage.getItem('jwt');
-  
-    if(jwt){
-      this.sessionService.checkSessionStatus().subscribe({
-        error: (err: any) => {
-          this.router.navigateByUrl('/login');
-        },
-        next: (receivedValue: LoginDetails) => {
-          AuthorizationUtils.userLogin(receivedValue, false);
-          this.router.navigateByUrl('');
-        }
-      });
-    }
-    else{
-      this.router.navigateByUrl('/login');
-      return;
-    }
+    this.sessionService.checkSessionStatus().subscribe({
+      error: (err: any) => {
+        this.router.navigateByUrl('/login');
+      },
+      next: (receivedValue: LoginDetails) => {
+        AuthorizationUtils.userLogin(receivedValue);
+        this.router.navigateByUrl('');
+      }
+    });
   }
 }

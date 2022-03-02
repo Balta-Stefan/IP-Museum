@@ -15,9 +15,6 @@
                     <a href="./museums">Muzeji</a>
                 </li>
             </ul>
-            <form method="post" action="/admin/logout">
-                <button type="submit">Odjava</button>
-            </form>
             <!--<a class="btn btn-danger" href="/logout" role="button">Odjava</a>-->
         </div>
     </div>

@@ -7,11 +7,7 @@ import museum.service.models.entities.AccesstokenEntity;
 import museum.service.models.entities.UserEntity;
 import museum.service.models.enums.Roles;
 import museum.service.repositories.AccessTokensRepository;
-import museum.service.security.AdminTokenAuthenticationProvider;
 import museum.service.services.AdminLoginService;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,16 +20,14 @@ import java.util.UUID;
 public class AdminLoginServiceImpl implements AdminLoginService
 {
     private final AccessTokensRepository tokensRepository;
-    private final AdminTokenAuthenticationProvider authenticationManager;
 
-    public AdminLoginServiceImpl(AccessTokensRepository tokensRepository, AdminTokenAuthenticationProvider authenticationManager)
+    public AdminLoginServiceImpl(AccessTokensRepository tokensRepository)
     {
         this.tokensRepository = tokensRepository;
-        this.authenticationManager = authenticationManager;
     }
 
     @Override
-    public Boolean loginAdmin(String token)
+    public CustomUserDetails loginAdmin(String token)
     {
         AccesstokenEntity accessToken = tokensRepository.findById(UUID.fromString(token)).orElseThrow(UnauthorizedException::new);
         UserEntity userEntity = accessToken.getUser();
@@ -42,7 +36,7 @@ public class AdminLoginServiceImpl implements AdminLoginService
                 userEntity.getUsername(),
                 null,
                 userEntity.getActive(),
-                userEntity.getRole(), null);
+                userEntity.getRole());
 
         if(LocalDateTime.now().isAfter(accessToken.getValidUntil()) || accessToken.getValid() == false)
         {
@@ -53,11 +47,6 @@ public class AdminLoginServiceImpl implements AdminLoginService
         {
             Roles userRole = accessToken.getUser().getRole();
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, token, null);
-
-            Authentication authentication = authenticationManager.authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
             accessToken.setValid(false);
             accessToken = tokensRepository.saveAndFlush(accessToken);
         }
@@ -66,6 +55,6 @@ public class AdminLoginServiceImpl implements AdminLoginService
             log.warn("Admin login service has thrown an exception: ", e);
             throw new UnauthorizedException();
         }
-        return true;
+        return userDetails;
     }
 }

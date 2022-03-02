@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-@Component
-@Order(Ordered.LOWEST_PRECEDENCE)
+//@Component
+//@Order(Ordered.LOWEST_PRECEDENCE)
 public class PostAuthenticationLoggingFilter extends OncePerRequestFilter
 {
     @Override

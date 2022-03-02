@@ -15,12 +15,10 @@ export class SessionService {
   }
 
   checkSessionStatus(): Observable<LoginDetails>{
-    const creds: LoginRequest = {username: 'a', password: 'b'};
-
-    return this.authenticate(creds);
+    return this.http.get<any>(`${baseURL}/session/status`);
   }
 
-  authenticate(credentials: LoginRequest): Observable<LoginDetails>{
+  login(credentials: LoginRequest): Observable<LoginDetails>{
     return this.http.post<any>(`${baseURL}/session/login`, credentials);
   }
 

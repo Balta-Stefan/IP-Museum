@@ -15,7 +15,6 @@ public class CustomUserDetails implements UserDetails
 {
     private final Integer id;
     private final String username, password;
-    private final String jwt;
     private final Boolean active;
     private final Roles role;
     private final List<GrantedAuthority> authorities = new ArrayList<>(1);
@@ -23,7 +22,7 @@ public class CustomUserDetails implements UserDetails
 
     private Boolean isLoggedIntoAdminApp = false;
 
-    public CustomUserDetails(Integer id, String username, String password, Boolean active, Roles role, String jwt)
+    public CustomUserDetails(Integer id, String username, String password, Boolean active, Roles role)
     {
         //this.userDTO = userDTO;
         this.role = role;
@@ -31,7 +30,6 @@ public class CustomUserDetails implements UserDetails
         this.id = id;
         this.password = password;
         this.active = active;
-        this.jwt = jwt;
 
 
         authorities.add(new SimpleGrantedAuthority(role.name()));

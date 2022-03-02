@@ -30,13 +30,13 @@ export class LoginPageComponent implements OnInit {
   login(): void{
     const loginRequest: LoginRequest = {username: this.formData.value['username'], password: this.formData.value['password']};
 
-    this.sessionService.authenticate(loginRequest).subscribe({
+    this.sessionService.login(loginRequest).subscribe({
       error: (err: any) => {
         console.log(err);
         this.loginMessage = "Prijava neuspješna";
       },
       next: (receivedObject: LoginDetails) => {
-        AuthorizationUtils.userLogin(receivedObject, true);
+        AuthorizationUtils.userLogin(receivedObject);
         this.router.navigateByUrl('');
       }
      

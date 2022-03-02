@@ -7,6 +7,5 @@ export interface LoginDetails{
     email: string;
     role: string;
     active: boolean;
-    jwt: string;
 	adminToken: string;
 }

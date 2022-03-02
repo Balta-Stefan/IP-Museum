@@ -34,7 +34,11 @@ public class EmailSenderImpl implements EmailSender
         helper.setTo(receiver);
         helper.setReplyTo(senderMail);
         helper.setText(message);
-        helper.addAttachment("Karta.pdf", attachment);
+        if(attachment != null)
+        {
+            helper.addAttachment("Karta.pdf", attachment);
+        }
+
 
         mailSender.send(mimeMessage);
         /*MimeMessagePreparator preparator = new MimeMessagePreparator()

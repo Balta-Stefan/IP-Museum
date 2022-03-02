@@ -1,8 +1,6 @@
 package museum.service.security;
 
-import museum.service.filters.PostAuthenticationLoggingFilter;
-import museum.service.filters.PreAuthenticationLoggingFilter;
-import museum.service.filters.JwtAuthorizationFilter;
+import museum.service.filters.AdminAuthFilter;
 import museum.service.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -42,11 +40,11 @@ public class SecurityConfig
     @Order(2)
     public static class MvcSecurityConfig extends WebSecurityConfigurerAdapter
     {
-        private final AdminTokenAuthenticationProvider adminTokenAuthenticationProvider;
+        private final AdminAuthFilter adminAuthFilter;
 
-        public MvcSecurityConfig(AdminTokenAuthenticationProvider adminTokenAuthenticationProvider)
+        public MvcSecurityConfig(AdminAuthFilter adminAuthFilter)
         {
-            this.adminTokenAuthenticationProvider = adminTokenAuthenticationProvider;
+            this.adminAuthFilter = adminAuthFilter;
         }
 
         @Override
@@ -55,25 +53,26 @@ public class SecurityConfig
             http
                     .antMatcher("/admin/**")
                     .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER) // for some reason, STATELESS keeps creating new cookies
+                    .and()
                     .authorizeRequests()
                     .antMatchers("/index.html", "/", "/css/*", "/js/*").permitAll()
                     .antMatchers(HttpMethod.GET, "/admin/login").permitAll()
                     .antMatchers("/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
                     .and()
-                    .logout(logout -> logout
-                                    .logoutUrl("/admin/logout")
-                                    .clearAuthentication(true)
-                                    .invalidateHttpSession(true)
-                                    .deleteCookies("JSESSIONID")
-                                    .logoutSuccessUrl("/"));
+                    .addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class);
         }
 
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception
+        @Bean
+        public FilterRegistrationBean<AdminAuthFilter> adminTokenFilter()
         {
-            auth.authenticationProvider(adminTokenAuthenticationProvider);
+            FilterRegistrationBean<AdminAuthFilter> registrationBean = new FilterRegistrationBean<>();
+
+            registrationBean.setFilter(adminAuthFilter);
+            registrationBean.addUrlPatterns("/admin/*");
+
+            return registrationBean;
         }
     }
 
@@ -84,13 +83,14 @@ public class SecurityConfig
     {
         private final UserDetailsService customUserDetailsService;
         private final PasswordEncoder passwordEncoder;
-        private final JwtAuthorizationFilter authorizationFilter;
 
-        public RestSecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, JwtAuthorizationFilter authorizationFilter)
+        private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+        public RestSecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, CustomLogoutSuccessHandler customLogoutSuccessHandler)//, JwtAuthorizationFilter authorizationFilter)
         {
             this.customUserDetailsService = customUserDetailsService;
             this.passwordEncoder = passwordEncoder;
-            this.authorizationFilter = authorizationFilter;
+            this.customLogoutSuccessHandler = customLogoutSuccessHandler;
         }
 
         @Override
@@ -104,28 +104,19 @@ public class SecurityConfig
         {
             http
                     .antMatcher("/api/v1/**")
-                    .cors().and().csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                    .csrf().disable()
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST,"/api/v1/user").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/transactions").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/session/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
-                    //.addFilterBefore(preAuthLoggingFilter, JwtAuthorizationFilter.class); // this will be applied to MVC endpoints too, despite the antMatcher for api endpoint above....
-        }
-
-        @Bean
-        public FilterRegistrationBean<JwtAuthorizationFilter> apiJwtFilter()
-        {
-            FilterRegistrationBean<JwtAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
-
-            registrationBean.setFilter(authorizationFilter);
-            registrationBean.addUrlPatterns("/api/v1/*");
-
-            return registrationBean;
+                    .logout(logout -> logout
+                            .logoutUrl("/api/v1/session/logout")
+                            .clearAuthentication(true)
+                            .invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID")
+                            .logoutSuccessHandler(customLogoutSuccessHandler));
         }
 
         @Bean

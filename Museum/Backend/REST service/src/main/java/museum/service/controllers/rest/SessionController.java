@@ -1,14 +1,12 @@
 package museum.service.controllers.rest;
 
+import museum.service.exceptions.UnauthorizedException;
 import museum.service.models.CustomUserDetails;
 import museum.service.models.requests.LoginDetails;
 import museum.service.models.responses.LoginResponse;
 import museum.service.services.UserSessionService;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,25 +22,15 @@ public class SessionController
     }
 
     @PostMapping("/login")
-    public LoginResponse checkSessionStatus(@RequestBody @Valid LoginDetails loginDetails, Authentication authentication)
+    public LoginResponse login(@RequestBody @Valid LoginDetails loginDetails, Authentication authentication)
     {
-        if(authentication != null)
-        {
-            CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-            return userSessionService.refreshLogin(userDetails);
-        }
-        else
-        {
-            return userSessionService.login(loginDetails);
-        }
+        return userSessionService.login(loginDetails);
     }
 
-    @PostMapping("/logout")
-    public void logout(Authentication authentication)
+    @GetMapping("/status")
+    public LoginResponse checkStatus(Authentication authentication)
     {
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-        String jwt = (String)authentication.getCredentials();
-
-        this.userSessionService.logout(userDetails);
+        return userSessionService.refreshLogin(userDetails);
     }
 }

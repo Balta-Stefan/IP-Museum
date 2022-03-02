@@ -24,7 +24,6 @@ public class PreAuthenticationLoggingFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
-        System.out.println("Pre auth filter");
         String remoteUser = request.getRemoteUser();
         String userIP = request.getRemoteAddr();
         String remoteHost = request.getRemoteHost();
@@ -37,9 +36,13 @@ public class PreAuthenticationLoggingFilter extends OncePerRequestFilter
         long bodySize = request.getContentLengthLong();
 
         List<String> cookiePairs = new ArrayList<>();
-        for(Cookie c : request.getCookies())
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null)
         {
-            cookiePairs.add(c.getName() + "-" + c.getValue());
+            for (Cookie c : request.getCookies())
+            {
+                cookiePairs.add(c.getName() + "-" + c.getValue());
+            }
         }
 
         String logID = UUID.randomUUID().toString();

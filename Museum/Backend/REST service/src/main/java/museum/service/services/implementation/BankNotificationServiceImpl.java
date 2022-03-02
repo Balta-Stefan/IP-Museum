@@ -9,6 +9,7 @@ import museum.service.models.entities.UserEntity;
 import museum.service.services.BankNotificationService;
 import museum.service.services.EmailSender;
 import museum.service.repositories.TourTicketsRepository;
+import museum.service.services.TourBeginningNotificationService;
 import museum.service.utilities.TourPDFCreator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class BankNotificationServiceImpl implements BankNotificationService
     private final ModelMapper modelMapper;
     private final TourTicketsRepository tourTicketsRepository;
     private final EmailSender emailSender;
+    private final TourBeginningNotificationService tourBeginningNotificationService;
 
     @Value("${ticket.email_notification.title}")
     private String emailTitle;
@@ -35,11 +37,12 @@ public class BankNotificationServiceImpl implements BankNotificationService
     @Value("${ticket.email_notification.body}")
     private String emailMessage;
 
-    public BankNotificationServiceImpl(ModelMapper modelMapper, TourTicketsRepository tourTicketsRepository, EmailSender emailSender)
+    public BankNotificationServiceImpl(ModelMapper modelMapper, TourTicketsRepository tourTicketsRepository, EmailSender emailSender, TourBeginningNotificationService tourBeginningNotificationService)
     {
         this.modelMapper = modelMapper;
         this.tourTicketsRepository = tourTicketsRepository;
         this.emailSender = emailSender;
+        this.tourBeginningNotificationService = tourBeginningNotificationService;
     }
 
     @Override

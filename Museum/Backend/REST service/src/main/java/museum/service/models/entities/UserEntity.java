@@ -61,9 +61,10 @@ public class UserEntity
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @LastModifiedBy
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedBy")
+    @LastModifiedBy
     private UserEntity updatedBy;
 
 

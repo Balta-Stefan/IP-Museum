@@ -8,10 +8,7 @@ import museum.service.models.enums.StaticResourceType;
 import museum.service.models.requests.PaymentRequest;
 import museum.service.models.responses.PaymentRequestResponse;
 import museum.service.repositories.*;
-import museum.service.services.CountriesService;
-import museum.service.services.FileService;
-import museum.service.services.MuseumService;
-import museum.service.services.WeatherService;
+import museum.service.services.*;
 import org.apache.logging.log4j.util.Strings;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +42,7 @@ public class MuseumServiceImpl implements MuseumService
     private final CountriesService countriesService;
     private final WeatherService weatherService;
     private final FileService fileService;
+    private final TourBeginningNotificationService tourTaskScheduler;
 
     private final ModelMapper modelMapper;
 
@@ -66,7 +64,7 @@ public class MuseumServiceImpl implements MuseumService
     private final long monoTimeoutSeconds = 6;
 
 
-    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, TourStaticContentRepository tourStaticContentRepository, CountriesService countriesService, WeatherService weatherService, FileService fileService, ModelMapper modelMapper)
+    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, TourStaticContentRepository tourStaticContentRepository, CountriesService countriesService, WeatherService weatherService, FileService fileService, TourBeginningNotificationService tourTaskScheduler, ModelMapper modelMapper)
     {
         this.toursRepository = toursRepository;
         this.userRepository = userRepository;
@@ -77,6 +75,7 @@ public class MuseumServiceImpl implements MuseumService
         this.countriesService = countriesService;
         this.weatherService = weatherService;
         this.fileService = fileService;
+        this.tourTaskScheduler = tourTaskScheduler;
         this.modelMapper = modelMapper;
     }
 
@@ -212,7 +211,8 @@ public class MuseumServiceImpl implements MuseumService
             tempDTO.setPurchased(purchase.getPurchased());
             tempDTO.setPaid(purchase.getPaid());
 
-            if(LocalDateTime.now().isBefore(tour.getStartTimestamp()))
+            LocalDateTime currentTime = LocalDateTime.now();
+            if(currentTime.isBefore(tour.getStartTimestamp()) || currentTime.isAfter(tour.getEndTimeStamp()))
             {
                 tempDTO.setStaticContent(null);
             }
@@ -409,7 +409,10 @@ public class MuseumServiceImpl implements MuseumService
 
         entityManager.refresh(tourEntity);
 
+        TourDTO tourDTO2 = modelMapper.map(tourEntity, TourDTO.class);
+        this.tourTaskScheduler.addTour(tourDTO2);
 
-        return modelMapper.map(tourEntity, TourDTO.class);
+
+        return tourDTO2;
     }
 }

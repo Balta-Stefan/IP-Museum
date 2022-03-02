@@ -1,6 +1,7 @@
 package museum.service.controllers.mvc;
 
 import lombok.extern.slf4j.Slf4j;
+import museum.service.models.CustomUserDetails;
 import museum.service.models.DTOs.*;
 import museum.service.models.entities.MuseumEntity;
 import museum.service.models.entities.MuseumTypeEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.Duration;
@@ -82,14 +84,13 @@ public class AdminDashboardController
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam("token") String token)
+    public String login(@RequestParam("token") String token, HttpServletRequest request)
     {
-        if(adminLoginService.loginAdmin(token) == true)
-        {
-            return "redirect:/admin";
-        }
+        CustomUserDetails userDetails = adminLoginService.loginAdmin(token);
 
-        return "unauthorized";
+        request.getSession().setAttribute("admin", true);
+        request.getSession().setAttribute("userDetails", userDetails);
+        return "redirect:/admin";
     }
 
 

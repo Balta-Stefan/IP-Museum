@@ -1,6 +1,8 @@
 package museum.service.services;
 
+import museum.service.models.CustomUserDetails;
+
 public interface AdminLoginService
 {
-    Boolean loginAdmin(String token);
+    CustomUserDetails loginAdmin(String token);
 }

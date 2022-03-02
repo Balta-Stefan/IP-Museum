@@ -1,7 +1,5 @@
 package museum.service.services.implementation;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import museum.service.exceptions.UnauthorizedException;
 import museum.service.models.CustomUserDetails;
@@ -16,13 +14,15 @@ import museum.service.services.UserSessionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+
 
 @Service
 @Slf4j
@@ -54,6 +54,7 @@ public class UserSessionServiceImpl implements UserSessionService
         this.userWatcherService = userWatcherService;
     }
 
+
     private String generateAdminToken(Integer userID)
     {
         UserEntity user = userRepository.findById(userID).get();
@@ -82,8 +83,7 @@ public class UserSessionServiceImpl implements UserSessionService
         return response;
     }
 
-
-    @Override
+     @Override
     public LoginResponse login(LoginDetails loginDetails)
     {
         try
@@ -94,9 +94,9 @@ public class UserSessionServiceImpl implements UserSessionService
                                     loginDetails.getPassword())
                     );
             CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             LoginResponse response = modelMapper.map(userDetails, LoginResponse.class);
-            response.setJwt(this.generateJwt(userDetails));
 
             if(userDetails.getRole().equals(Roles.ADMIN))
             {
@@ -107,28 +107,15 @@ public class UserSessionServiceImpl implements UserSessionService
 
             return response;
         }
+        catch(BadCredentialsException badCreds)
+        {
+            log.warn("Someone has tried to log in with bad credentials: ", badCreds);
+            throw new UnauthorizedException();
+        }
         catch(Exception e)
         {
             log.warn("User session service has thrown an exception: ", e);
             throw new UnauthorizedException();
         }
-   }
-
-   @Override
-   public void logout(CustomUserDetails userDetails)
-   {
-       String jwtToken = userDetails.getJwt();
-       this.userWatcherService.logout();
-   }
-
-   private String generateJwt(CustomUserDetails userDetails)
-   {
-       return Jwts.builder()
-               .setId(userDetails.getId().toString())
-               .setSubject(userDetails.getUsername())
-               .claim("role", userDetails.getRole().name())
-               .setExpiration(new Date(System.currentTimeMillis() + jwt_duration_miliseconds))
-               .signWith(SignatureAlgorithm.HS512, jwt_secret)
-               .compact();
    }
 }
