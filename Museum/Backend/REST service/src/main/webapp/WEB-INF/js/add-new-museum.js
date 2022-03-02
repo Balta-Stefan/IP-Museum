@@ -18,7 +18,11 @@ async function getRegions()
     const response = await fetch(URL);
     const data = await response.json();
 
-    clearSelect(document.getElementById("region"));
+    // clear regions and cities select
+    document.getElementById("region").options.length = 0;
+    document.getElementById("city").options.length = 0;
+    //clearSelect(document.getElementById("region"));
+    //clearSelect(document.getElementById("city"));
 
     const regionsSelect = document.getElementById("region");
 
@@ -43,7 +47,9 @@ async function getCities()
     const response = await fetch(URL);
     const data = await response.json();
 
-    clearSelect(document.getElementById("city"));
+    // clear cities select
+    document.getElementById("city").options.length = 0;
+    //clearSelect(document.getElementById("city"));
 
     const citySelect = document.getElementById("city");
 

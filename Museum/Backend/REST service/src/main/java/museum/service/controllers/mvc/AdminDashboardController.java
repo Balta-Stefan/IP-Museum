@@ -41,7 +41,7 @@ public class AdminDashboardController
 
     private final ModelMapper modelMapper;
 
-    private final long monoTimeoutSeconds = 4;
+    private final long monoTimeoutSeconds = 6;
 
     public AdminDashboardController(AdminLoginService adminLoginService, AdminInfoService adminInfoService, CountriesService countriesService, MuseumService museumService, MuseumTypeRepository museumTypeRepository, ModelMapper modelMapper)
     {
