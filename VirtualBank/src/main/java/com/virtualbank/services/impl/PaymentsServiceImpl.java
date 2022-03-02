@@ -90,6 +90,10 @@ public class PaymentsServiceImpl implements PaymentsService
         {
             throw new InsufficientFunds();
         }
+        if(payerEntity.getEnabled() == false)
+        {
+            throw new ForbiddenException();
+        }
 
         payerEntity.setAvailableFunds(payerEntity.getAvailableFunds().subtract(transactionEntity.getAmount()));
         transactionEntity.setPayer(payerEntity);

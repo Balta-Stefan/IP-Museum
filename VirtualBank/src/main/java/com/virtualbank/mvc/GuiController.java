@@ -106,7 +106,8 @@ public class GuiController
                         request.getSession().setAttribute("user", personDTO);
                         returnPage = "PersonPage";
                         //model.addAttribute("transactions", getPersonsTransactions(personDTO));
-                        request.getSession().setAttribute("transactions", getPersonsTransactions(personDTO));
+                        model.addAttribute("transactions", getPersonsTransactions(personDTO));
+                        model.addAttribute("activity_change_status", "Status naloga: " + (personDTO.getEnabled() ? "aktivan" : "neaktivan"));
                     }
                     else
                     {
@@ -125,6 +126,7 @@ public class GuiController
                     {
                         changePersonActivity(personDTO);
                         returnPage = "PersonPage";
+                        model.addAttribute("transactions", getPersonsTransactions(personDTO));
                         model.addAttribute("activity_change_status", "Status naloga: " + (personDTO.getEnabled() ? "aktivan" : "neaktivan"));
                     }
                     break;

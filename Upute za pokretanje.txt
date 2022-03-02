@@ -1,0 +1,19 @@
+1)Lozinke i API kljucevi:
+	a)email:
+		-spring.mail.username=someemail
+		-spring.mail.password=somepass
+	b)museum transaction receiving url: transactions.notify_url=http://localhost:NEKI_PORT/api/v1/transactions
+	c)Museum - za banku:
+		-bank_account.username=Treci muzej
+		-bank_account.password=b9c20b9b-09ce-4b84-b435-ffc8d15cc82c
+		-http://localhost:PORT_BANKE/api/v1/payments
+		
+	d)Museum
+		-api.key.alpha_2_code_converter=APIKLJUC (battuta)
+		-api.key.weather=APIKLJUC (weather)
+		-za staticke fajlove:
+			-static_resources_path=D:\\IP projekat static\\Tours static content
+			-spring.web.resources.static-locations=file:D:/IP projekat static/Angular frontend/,file:D:/IP projekat static/Tours static content/
+
+2)Banka:
+	-posjetiti localhost:PORT_BANKE/gui za web interfejs
