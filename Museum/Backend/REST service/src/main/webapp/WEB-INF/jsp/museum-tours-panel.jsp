@@ -26,7 +26,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Cijena</label>
-                            <input required type="number" min="0" class="form-control" id="price" name="price" placeholder="Cijena karte">
+                            <input required type="number" min="0" step="any" class="form-control" id="price" name="price" placeholder="Cijena karte">
                         </div>
                         <div class="mb-3">
                             <label for="pictures" class="form-label">Odaberite 5 do 10 slika</label>

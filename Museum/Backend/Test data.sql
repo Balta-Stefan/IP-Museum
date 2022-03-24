@@ -1,5 +1,6 @@
-INSERT INTO Museums(name, address, phone, city, country, latitude, longitude, type)
-VALUES('Muzej 1', 'Prvog muzeja 1', '122-3232-121', 'Sarajevo', 'BiH', 12.32, -6.05, 'Kulturni'); 
-
-INSERT INTO Tours(museum, startTimeStamp, endTimeStamp, price) 
-VALUES(2, );
+insert into museumtypes(type) values('Kulturni');
+insert into museumtypes(type) values('Narodni');
+insert into museumtypes(type) values('Arhaicni');
+insert into museumtypes(type) values('Stereotipicni');
+insert into museumtypes(type) values('Kraljevski');
+insert into museumtypes(type) values('Dnevni');

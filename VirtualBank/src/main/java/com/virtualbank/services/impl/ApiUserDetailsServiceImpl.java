@@ -23,11 +23,11 @@ public class ApiUserDetailsServiceImpl implements ApiUserDetailsService
 
 
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException
+    public UserDetails loadUserByUsername(String token) throws UsernameNotFoundException
     {
         // load by user's token received via http basic authentication
-        CompanyEntity company = companyRepository.findByName(name).orElseThrow(() -> new UsernameNotFoundException("Password incorrect"));
-        ApiUserDetails userDetails = new ApiUserDetails(company.getEnabled(), name, company.getToken(), Collections.emptyList(), company.getId());
+        CompanyEntity company = companyRepository.findByName(token).orElseThrow(() -> new UsernameNotFoundException("Password incorrect"));
+        ApiUserDetails userDetails = new ApiUserDetails(company.getEnabled(), token, company.getToken(), Collections.emptyList(), company.getId());
 
         return userDetails;
     }
