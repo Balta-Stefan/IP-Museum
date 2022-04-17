@@ -24,9 +24,10 @@ public class AuditorAwareImpl implements AuditorAware<UserEntity>
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null)
         {
-            if(authentication.getPrincipal() instanceof CustomUserDetails userDetails) // this is required because of JPA auditing triggers updatedAt on row creation.This is a problem when a user registers himself.
+            if(authentication.getPrincipal() instanceof CustomUserDetails) // this is required because of JPA auditing triggers updatedAt on row creation.This is a problem when a user registers himself.
             {
-                return userRepository.findById(userDetails.getId());
+                CustomUserDetails tmp = (CustomUserDetails)authentication.getPrincipal();
+                return userRepository.findById(tmp.getId());
             }
         }
         return Optional.empty();

@@ -15,7 +15,7 @@
                     <a href="./museums">Muzeji</a>
                 </li>
             </ul>
-            <!--<a class="btn btn-danger" href="/logout" role="button">Odjava</a>-->
+            <a class="btn btn-danger" href="./logout" role="button">Odjava</a>
         </div>
     </div>
 </nav>

@@ -61,6 +61,8 @@ public class SecurityConfig
                     .antMatchers("/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
                     .and()
+                    .logout(logout -> logout.logoutUrl("/admin/logout")
+                            .logoutSuccessUrl("/"))
                     .addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class);
         }
 

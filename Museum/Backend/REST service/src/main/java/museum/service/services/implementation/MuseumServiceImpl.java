@@ -317,7 +317,7 @@ public class MuseumServiceImpl implements MuseumService
         TourEntity tourEntity = toursRepository.findById(tourID).orElseThrow(NotFoundException::new);
         List<TourStaticContent> staticContent = staticContentDTOS.stream()
                 .map(s -> modelMapper.map(s, TourStaticContent.class))
-                .toList();
+                .collect(Collectors.toList());
         staticContent.forEach(s -> s.setStaticContentID(null));
 
         tourEntity.getStaticContent().addAll(staticContent);

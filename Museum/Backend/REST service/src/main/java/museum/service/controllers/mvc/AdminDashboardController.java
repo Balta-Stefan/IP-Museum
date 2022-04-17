@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -105,7 +106,7 @@ public class AdminDashboardController
         List<UserDTO> users = page
                 .stream()
                 .map(u -> modelMapper.map(u, UserDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
 
         model.addAttribute("users", users);
@@ -145,7 +146,7 @@ public class AdminDashboardController
         List<UserDTO> users = page
                 .stream()
                 .map(u -> modelMapper.map(u, UserDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
         model.addAttribute("users", users);
         model.addAttribute("onlyInactive", onlyInactive);
@@ -167,7 +168,7 @@ public class AdminDashboardController
         List<MuseumDTO> museums = museumsPage
                 .get()
                 .map(m -> modelMapper.map(m, MuseumDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
         model.addAttribute("museums", museums);
 

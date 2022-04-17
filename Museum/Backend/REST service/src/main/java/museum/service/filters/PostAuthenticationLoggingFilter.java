@@ -35,9 +35,10 @@ public class PostAuthenticationLoggingFilter extends OncePerRequestFilter
         {
             Object principal = authentication.getPrincipal();
 
-            if(principal instanceof CustomUserDetails userDetails)
+            if(principal instanceof CustomUserDetails)
             {
-                user = userDetails.getId().toString();
+                CustomUserDetails tmp = (CustomUserDetails)principal;
+                user = tmp.getId().toString();
             }
             else
             {
