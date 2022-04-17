@@ -29,9 +29,9 @@ public class TourNotifierService
 
     @Async
     @Transactional
-    public void notifyUser(TourDTO tourDTO)
+    public void notifyUser(Integer tourID)
     {
-        Optional<TourEntity> tourEntityOpt = toursRepository.findById(tourDTO.getTourID());
+        Optional<TourEntity> tourEntityOpt = toursRepository.findById(tourID);
         if(tourEntityOpt.isEmpty())
         {
             return;
@@ -46,7 +46,7 @@ public class TourNotifierService
 
             String receiver = userEntity.getEmail();
             String title = "Obavjestenje o pocetku obilaska.";
-            String message = "Obilazak pocinje u: " + tourDTO.getStartTimestamp().toLocalTime().toString();
+            String message = "Obilazak pocinje u: " + tourEntity.getStartTimestamp().toLocalTime().toString();
 
             try
             {

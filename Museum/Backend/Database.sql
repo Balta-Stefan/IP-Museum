@@ -193,6 +193,22 @@ CREATE TABLE IF NOT EXISTS `museum`.`AccessTokens` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `museum`.`EventNotifications`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `museum`.`EventNotifications` (
+  `id` INT AUTO_INCREMENT,
+  `sent` TINYINT NOT NULL,
+  `tourID` INT NOT NULL,
+  `sendDateTime` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `notifications_event_FK`
+	FOREIGN KEY (`tourID`)
+	REFERENCES `museum`.`Tours`(`tourID`)
+	ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
