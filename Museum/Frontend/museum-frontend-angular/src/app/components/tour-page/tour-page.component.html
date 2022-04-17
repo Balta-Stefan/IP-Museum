@@ -60,15 +60,17 @@
     </div>
 
     <div *ngIf="youtubeVideoURL">
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe width="560" 
-                height="315" 
-                [src]="youtubeVideoURL" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allowfullscreen
-                class="embed-responsive-item">
-            </iframe>
+        <div class="d-flex justify-content-center">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe width="560" 
+                    height="315" 
+                    [src]="youtubeVideoURL" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allowfullscreen
+                    class="embed-responsive-item">
+                </iframe>
+            </div>
         </div>
     </div>
 

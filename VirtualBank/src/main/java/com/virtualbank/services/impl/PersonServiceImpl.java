@@ -33,6 +33,25 @@ public class PersonServiceImpl implements PersonService
         this.modelMapper = modelMapper;
     }
 
+    private String generateCardNumber()
+    {
+        Random rnd = new Random();
+
+        StringBuilder tempCardNumber = new StringBuilder();
+        for(int j = 0; j < 16; j++)
+        {
+            tempCardNumber.append(rnd.nextInt(10));
+        }
+
+        return tempCardNumber.toString();
+    }
+
+    private String generatePin()
+    {
+        Random rnd = new Random();
+        return Integer.toString(1000 + rnd.nextInt(8999));
+    }
+
     @Override
     public PersonDTO create(@Valid PersonDTO personDTO) throws Exception
     {
@@ -41,21 +60,8 @@ public class PersonServiceImpl implements PersonService
         personEntity.setEnabled(true);
         personEntity.setAvailableFunds(BigDecimal.valueOf(0));
         personEntity.setCardExpirationDate(LocalDate.now().plusYears(2));
-
-        Random rnd = new Random();
-
-
-        StringBuilder tempCardNumber = new StringBuilder();
-        for(int j = 0; j < 16; j++)
-        {
-            tempCardNumber.append(rnd.nextInt(10));
-        }
-        personEntity.setCardNumber(tempCardNumber.toString());
-
-        // generate pin
-        String tempPin = Integer.toString(1000 + rnd.nextInt(8999));
-
-        personEntity.setPin(tempPin);
+        personEntity.setCardNumber(this.generateCardNumber());
+        personEntity.setPin(this.generatePin());
 
         personEntity = personRepository.saveAndFlush(personEntity);
         entityManager.refresh(personEntity);

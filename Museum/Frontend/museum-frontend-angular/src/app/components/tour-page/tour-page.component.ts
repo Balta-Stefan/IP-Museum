@@ -104,18 +104,21 @@ export class TourPageComponent implements OnInit, OnDestroy {
   private prepareStaticContent(): void{
     this.showTour = true;
 
+    let tmpPics: string[] = []
+
     this.tour.staticContent.forEach(c => {
       if(c.isYouTubeVideo == true){
         this.youtubeVideoURL = this.sanitizer.bypassSecurityTrustResourceUrl(c.uri);
-
       } 
       else if(c.resourceType == StaticResourceType.PICTURE.toString()){
-        this.pictures.push(c.uri);
+        tmpPics.push(c.uri);
       }
       else{
         this.video = c;
       }
     });
+
+    this.pictures = tmpPics;
   }
 
   private refreshTour(): void{
@@ -141,6 +144,8 @@ export class TourPageComponent implements OnInit, OnDestroy {
         this.showTour = true;
 
         this.refreshTour();
+        clearInterval(this.timer);
+        this.timer = null;
       }
       else{
         let difference: number = (this.tour.startTimestamp.valueOf() - timestampCounter.valueOf()) / 1000;
@@ -176,6 +181,7 @@ export class TourPageComponent implements OnInit, OnDestroy {
           error: (err: any) => {
             this.cardFormMessage = 'Transakcija neuspješna.';
             this.cardFormSuccess = false;
+            this.disableSendCardDataButton = false;
           },
           next: (bankResponse: BankTransactionDTO) => {
             this.cardFormMessage = 'Transakcija uspješna.';

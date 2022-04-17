@@ -1,4 +1,4 @@
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+<div *ngIf="activePicture" id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img class="d-block w-100" [src]="activePicture">

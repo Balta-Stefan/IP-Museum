@@ -9,8 +9,8 @@ import java.util.List;
 public interface MuseumsRepository extends JpaRepository<MuseumEntity, Integer>
 {
     @Query("SELECT m FROM MuseumEntity m WHERE " +
-			"(:name IS NULL OR m.name=:name) AND" +
-            "(:country IS NULL OR m.country=:country) AND" +
-            "(:city IS NULL OR m.city=:city)")
+			"(:name IS NULL OR m.name LIKE %:name%) AND" +
+            "(:country IS NULL OR m.country LIKE %:country%) AND" +
+            "(:city IS NULL OR m.city LIKE %:city%)")
     List<MuseumEntity> filterMuseums(String name, String country, String city);
 }

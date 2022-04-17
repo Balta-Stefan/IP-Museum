@@ -358,8 +358,10 @@ public class MuseumServiceImpl implements MuseumService
         String youtubeLink = tourDTO.getYoutubeLink();
         if(youtubeLink != null && youtubeLink.trim().equals(Strings.EMPTY) == false)
         {
+            String embedYtLink = "https://youtube.com/embed/" + youtubeLink.substring(youtubeLink.indexOf("=") + 1);
+
             TourStaticContentDTO tmp = new TourStaticContentDTO();
-            tmp.setURI(tourDTO.getYoutubeLink());
+            tmp.setURI(embedYtLink);
             tmp.setIsYouTubeVideo(true);
             tmp.setResourceType(StaticResourceType.VIDEO);
 
@@ -378,7 +380,7 @@ public class MuseumServiceImpl implements MuseumService
             contentDTOS.add(tmp);
         }
         MultipartFile video = tourDTO.getVideo();
-        if(video != null)
+        if(video != null && video.isEmpty() == false)
         {
             TourStaticContentDTO tmp = new TourStaticContentDTO();
             tmp.setIsYouTubeVideo(false);

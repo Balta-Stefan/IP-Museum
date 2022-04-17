@@ -21,7 +21,7 @@ import { TourPageComponent } from './components/tour-page/tour-page.component';
 import { WeatherCardComponent } from './components/weather-card/weather-card.component';
 import { PictureCarouselComponent } from './components/picture-carousel/picture-carousel.component';
 
-export const baseURL: string = "api/v1";
+export const baseURL: string = "/api/v1";
 export const jsonHeaders: HttpHeaders = new HttpHeaders({
   'Accept': 'application/json', 
   'Content-Type': 'application/json'

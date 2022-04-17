@@ -25,7 +25,6 @@ public class PersonEntity extends ClientEntity
 
     @Basic
     @Column(name = "cardNumber", nullable = false, unique = true, length = 16)
-    @Length(min = 16, max = 16)
     private String cardNumber;
 
     @Basic

@@ -42,9 +42,12 @@ public class SecurityConfig
     {
         private final AdminAuthFilter adminAuthFilter;
 
-        public MvcSecurityConfig(AdminAuthFilter adminAuthFilter)
+        private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+        public MvcSecurityConfig(AdminAuthFilter adminAuthFilter, CustomLogoutSuccessHandler customLogoutSuccessHandler)
         {
             this.adminAuthFilter = adminAuthFilter;
+            this.customLogoutSuccessHandler = customLogoutSuccessHandler;
         }
 
         @Override
@@ -62,7 +65,11 @@ public class SecurityConfig
                     .anyRequest().authenticated()
                     .and()
                     .logout(logout -> logout.logoutUrl("/admin/logout")
-                            .logoutSuccessUrl("/"))
+                            .logoutSuccessUrl("/")
+                            .clearAuthentication(true)
+                            .invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID")
+                            .logoutSuccessHandler(customLogoutSuccessHandler))
                     .addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class);
         }
 
@@ -116,9 +123,13 @@ public class SecurityConfig
                     .logout(logout -> logout
                             .logoutUrl("/api/v1/session/logout")
                             .clearAuthentication(true)
+                            .logoutSuccessHandler(customLogoutSuccessHandler));
+                    /*.logout(logout -> logout
+                            .logoutUrl("/api/v1/session/logout")
+                            .clearAuthentication(true)
                             .invalidateHttpSession(true)
                             .deleteCookies("JSESSIONID")
-                            .logoutSuccessHandler(customLogoutSuccessHandler));
+                            .logoutSuccessHandler(customLogoutSuccessHandler));*/
         }
 
         @Bean
