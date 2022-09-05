@@ -14,13 +14,22 @@ import java.time.Duration;
 @Slf4j
 public class WeatherServiceImpl implements WeatherService
 {
-    @Value("${api.url.weather}")
-    private String url;
+    private final String url;
 
-    @Value("${api.key.weather}")
-    private String apiKey;
+    private final String apiKey;
 
     private final int requestTimeoutSeconds = 10;
+
+    private final WebClient webClient;
+
+    public WeatherServiceImpl(@Value("${api.url.weather}") String url, @Value("${api.key.weather}") String apiKey)
+    {
+        this.url = url;
+        this.apiKey = apiKey;
+        this.webClient = WebClient.builder()
+                .baseUrl(url)
+                .build();
+    }
 
     @Override
     public WeatherDTO getWeather(BigDecimal latitude, BigDecimal longitude)
@@ -28,11 +37,8 @@ public class WeatherServiceImpl implements WeatherService
         try
         {
             // api.openweathermap.org/data/2.5/weather?lat={LATITUDE}&lon={LONGITUDE}&units=metric&lang=hr&appid={MY_KEY}
-            WebClient client = WebClient.builder()
-                    .baseUrl(url)
-                    .build();
 
-            return client.get()
+            return webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .queryParam("lat", "{LATITUDE}")
                             .queryParam("lon", "{LONGITUDE}")
