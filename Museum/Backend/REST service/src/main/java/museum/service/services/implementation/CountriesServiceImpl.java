@@ -21,6 +21,8 @@ public class CountriesServiceImpl implements CountriesService
 
     private final int requestTimeoutSeconds = 10;
 
+    private final WebClient webclient;
+
     public CountriesServiceImpl(@Value("${api.key.alpha_2_code_converter}") String alpha2ConverterApiKey,
                                 @Value("${countries-api-url}") String countriesApiURL,
                                 @Value("${alpha2Region-api-url}") String alpha2RegionURL,
@@ -30,17 +32,15 @@ public class CountriesServiceImpl implements CountriesService
         this.countriesApiURL = countriesApiURL;
         this.alpha2RegionURL = alpha2RegionURL;
         this.alpha2AndRegion2CitiesURL = alpha2AndRegion2CitiesURL;
+
+        webclient = WebClient.builder().build();
     }
 
     @Override
     public Mono<CountryDTO[]> getCountries()
     {
-
-        WebClient client = WebClient.builder()
-                .baseUrl(countriesApiURL)
-                .build();
-
-        return client.get()
+        return webclient.get()
+                .uri(countriesApiURL)
                 .retrieve()
                 .bodyToMono(CountryDTO[].class);
 
@@ -49,15 +49,10 @@ public class CountriesServiceImpl implements CountriesService
     @Override
     public Mono<RegionDTO[]> getRegions(String alpha2)
     {
-
-        WebClient client = WebClient.builder()
-                .baseUrl(alpha2RegionURL)
-                .build();
-
-        return client
+        return webclient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/{COUNTRY_CODE}/all/")
+                        .path(alpha2RegionURL + "/{COUNTRY_CODE}/all/")
                         .queryParam("key", "{API_KEY}")
                         .build(alpha2, alpha2ConverterApiKey))
                 .retrieve()
@@ -68,14 +63,10 @@ public class CountriesServiceImpl implements CountriesService
     @Override
     public Mono<CityDTO[]> getCities(String alpha2Code, String region)
     {
-        WebClient client = WebClient.builder()
-                .baseUrl(alpha2AndRegion2CitiesURL)
-                .build();
-
-        return client
+        return webclient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(alpha2Code + "/search/")
+                        .path(alpha2AndRegion2CitiesURL + alpha2Code + "/search/")
                         .queryParam("region", "{region}")
                         .queryParam("key", "{API_KEY}")
                         .build(region, alpha2ConverterApiKey))
