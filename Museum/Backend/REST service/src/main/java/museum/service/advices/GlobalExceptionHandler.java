@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
@@ -42,4 +43,8 @@ public class GlobalExceptionHandler
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleViolation(){}
+
+    @ExceptionHandler(WebClientResponseException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public void handleWebClientExceptions(){}
 }
