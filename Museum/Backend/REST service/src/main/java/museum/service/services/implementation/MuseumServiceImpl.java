@@ -49,22 +49,35 @@ public class MuseumServiceImpl implements MuseumService
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Value("${transactions.notify_url}")
-    private String transactionNotificationURL;
+    private final String transactionNotificationURL;
 
-    @Value("${bank_account.username}")
-    private String bankAccountUsername;
+    private final String bankAccountUsername;
 
-    @Value("${bank_account.password}")
-    private String bankAccountPassword;
+    private final String bankAccountPassword;
 
-    @Value("${bank_url}")
-    private String bank_url;
+
+    private final String bank_url;
 
     private final long monoTimeoutSeconds = 6;
 
+    private final WebClient bankWebClient;
 
-    public MuseumServiceImpl(ToursRepository toursRepository, UserRepository userRepository, MuseumsRepository museumsRepository, TourTicketsRepository tourTicketsRepository, MuseumTypeRepository museumTypeRepository, TourStaticContentRepository tourStaticContentRepository, CountriesService countriesService, WeatherService weatherService, FileService fileService, TourBeginningNotificationService tourTaskScheduler, ModelMapper modelMapper)
+
+    public MuseumServiceImpl(ToursRepository toursRepository,
+                             UserRepository userRepository,
+                             MuseumsRepository museumsRepository,
+                             TourTicketsRepository tourTicketsRepository,
+                             MuseumTypeRepository museumTypeRepository,
+                             TourStaticContentRepository tourStaticContentRepository,
+                             CountriesService countriesService,
+                             WeatherService weatherService,
+                             FileService fileService,
+                             TourBeginningNotificationService tourTaskScheduler,
+                             ModelMapper modelMapper,
+                             @Value("${transactions.notify_url}") String transactionNotificationURL,
+                             @Value("${bank_account.username}") String bankAccountUsername,
+                             @Value("${bank_account.password}") String bankAccountPassword,
+                             @Value("${bank_url}") String bank_url)
     {
         this.toursRepository = toursRepository;
         this.userRepository = userRepository;
@@ -77,6 +90,16 @@ public class MuseumServiceImpl implements MuseumService
         this.fileService = fileService;
         this.tourTaskScheduler = tourTaskScheduler;
         this.modelMapper = modelMapper;
+        this.transactionNotificationURL = transactionNotificationURL;
+        this.bankAccountUsername = bankAccountUsername;
+        this.bankAccountPassword = bankAccountPassword;
+        this.bank_url = bank_url;
+
+        this.bankWebClient = WebClient.builder()
+            .defaultHeaders(header -> header.setBasicAuth(bankAccountUsername, bankAccountPassword))
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .baseUrl(bank_url)
+            .build();
     }
 
     @Override
@@ -106,13 +129,9 @@ public class MuseumServiceImpl implements MuseumService
 
         PaymentRequest request = new PaymentRequest(tourEntity.getPrice(), transactionNotificationURL, tourpurchaseEntity.getPurchaseId().toString());
 
-        WebClient client = WebClient.builder()
-                .defaultHeaders(header -> header.setBasicAuth(bankAccountUsername, bankAccountPassword))
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .baseUrl(bank_url)
-                .build();
 
-        PaymentRequestResponse paymentResponse = client.post()
+
+        PaymentRequestResponse paymentResponse = bankWebClient.post()
                 .body(Mono.just(request), PaymentRequest.class)
                 .retrieve()
                 .bodyToMono(PaymentRequestResponse.class)
