@@ -9,22 +9,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 @Service
 public class CountriesServiceImpl implements CountriesService
 {
-    private final String countriesApiURL = "https://restcountries.com/v3.1/region/europe";
-    private final String alpha2RegionURL = "http://battuta.medunes.net/api/region";
-    private final String alpha2AndRegion2CitiesURL = "http://battuta.medunes.net/api/city/";
+    private final String countriesApiURL;
+    private final String alpha2RegionURL;
+    private final String alpha2AndRegion2CitiesURL;
 
-    @Value("${api.key.alpha_2_code_converter}")
-    private String alpha2ConverterApiKey;
+
+    private final String alpha2ConverterApiKey;
 
     private final int requestTimeoutSeconds = 10;
+
+    public CountriesServiceImpl(@Value("${api.key.alpha_2_code_converter}") String alpha2ConverterApiKey,
+                                @Value("${countries-api-url}") String countriesApiURL,
+                                @Value("${alpha2Region-api-url}") String alpha2RegionURL,
+                                @Value("${alpha2AndRegion2Cities-api-url}") String alpha2AndRegion2CitiesURL)
+    {
+        this.alpha2ConverterApiKey = alpha2ConverterApiKey;
+        this.countriesApiURL = countriesApiURL;
+        this.alpha2RegionURL = alpha2RegionURL;
+        this.alpha2AndRegion2CitiesURL = alpha2AndRegion2CitiesURL;
+    }
 
     @Override
     public Mono<CountryDTO[]> getCountries()
