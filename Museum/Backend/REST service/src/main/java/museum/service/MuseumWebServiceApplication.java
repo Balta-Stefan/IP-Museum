@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableScheduling
 @EnableAsync
 public class MuseumWebServiceApplication extends SpringBootServletInitializer
